@@ -2,7 +2,7 @@
     <v-data-table
       :headers="headers"
       :items="incomes"
-      sort-by="date"
+      sort-by="category"
       class="elevation-1" >
       <template v-slot:top >
         <v-toolbar flat color="white">
@@ -15,7 +15,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="1000px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">New Income</v-btn>
+              <v-btn color="primary" dark class="mb-2" v-on="on">Add Income</v-btn>
             </template>
             <v-card>
             <v-card-title>
@@ -36,7 +36,7 @@
                     <v-text-field v-model="editedItem.amount" placeholder="0 yen" label="Amount"></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-date-picker v-model="editedItem.date"></v-date-picker>
+                    <v-date-picker v-model="editedItem.date" type="month"></v-date-picker>
                   </v-col>
                 </v-row>
               </v-container>
@@ -86,20 +86,17 @@ export default {
           value: 'category'
         },
         { text: 'Amount', value: 'amount', sortable: false },
-        { text: 'Date', value: 'date', sortable: true },
         { text: 'Actions', value: 'action', sortable: false }
       ],
       incomes: [],
       editedIndex: -1,
       editedItem: {
         category: '',
-        amount: 0,
-        date: null
+        amount: 0
       },
       defaultItem: {
         category: '',
-        amount: 0,
-        date: null
+        amount: 0
       },
       categories: ['Salary', 'Renting', 'Pension', 'Extra hours', 'Bonus', 'Vacation', 'Others']
     }),
@@ -125,23 +122,19 @@ export default {
         this.incomes = [
           {
             category: 'Salary',
-            amount: 100000,
-            date: '2020-03-06'
+            amount: 100000
           },
           {
             category: 'Renting',
-            amount: 100000,
-            date: '2020-03-06'
+            amount: 100000
           },
           {
             category: 'Vacation',
-            amount: 100000,
-            date: '2020-03-06'
+            amount: 100000
           },
           {
             category: 'Extra hours',
-            amount: 100000,
-            date: '2020-03-06'
+            amount: 100000
           }
         ]
       },

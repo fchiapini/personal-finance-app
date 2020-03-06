@@ -2,7 +2,7 @@
     <v-data-table
       :headers="headers"
       :items="expenses"
-      sort-by="date"
+      sort-by="category"
       class="elevation-1" >
       <template v-slot:top >
         <v-toolbar flat color="white">
@@ -15,7 +15,7 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="1000px">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">New Expense</v-btn>
+              <v-btn color="primary" dark class="mb-2" v-on="on">Add Expense</v-btn>
             </template>
             <v-card>
             <v-card-title>
@@ -41,9 +41,6 @@
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field v-model="editedItem.amount" placeholder="0 yen" label="Amount"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-date-picker v-model="editedItem.date"></v-date-picker>
                   </v-col>
                 </v-row>
               </v-container>
@@ -94,7 +91,6 @@ export default {
         },
         { text: 'Amount', value: 'amount', sortable: false },
         { text: 'Description', value: 'amount', sortable: false },
-        { text: 'Date', value: 'date', sortable: true },
         { text: 'Actions', value: 'action', sortable: false }
       ],
       expenses: [],
@@ -102,14 +98,12 @@ export default {
       editedItem: {
         category: '',
         amount: 0,
-        description: '',
-        date: null
+        description: ''
       },
       defaultItem: {
         category: '',
         amount: 0,
-        description: '',
-        date: null
+        description: ''
       },
       categories: ['Housing', 'Transport', 'Food', 'Health', 'Education', 'Clothing', 'Personal care', 'Leisure', 'Taxes', 'Others'],
       descriptions: [
@@ -125,7 +119,7 @@ export default {
 
     computed: {
       formTitle() {
-        return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense';
+        return this.editedIndex === -1 ? 'Add Expense' : 'Edit Expense';
       }
     },
 
@@ -145,14 +139,13 @@ export default {
           {
             category: 'Housing',
             amount: 100000,
-            description: 'Renting',
-            date: '2020-03-06'
+            description: 'Renting'
           },
           {
             category: 'Food',
             amount: '30000',
-            description: 'Supermarket',
-            date: null}
+            description: 'Supermarket'
+          }
         ]
       },
 

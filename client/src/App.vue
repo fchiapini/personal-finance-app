@@ -9,22 +9,19 @@
     </v-app-bar>
 
     <v-content>
-      <Income></Income>
-      <Expense></Expense>
+      <Budget></Budget>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import Income from './components/Income';
-import Expense from './components/Expense';
+import Budget from './components/Budget';
 
 export default {
   name: 'App',
 
   components: {
-    Income,
-    Expense
+    Budget
   },
 
   data: () => ({
