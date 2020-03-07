@@ -35,14 +35,14 @@
         >
           <v-card
             v-for="budget in sortedBudgets"
-            :key="budget"
+            :key="budget.date"
             class="ma-3 pa-6"
             outlined
             tile
           >
-            {{ budget }}
-            <Income></Income>
-            <Expense></Expense>
+            {{ budget.date }}
+            <Income :date="budget.date" :incomes="budget.incomes"></Income>
+            <Expense :date="budget.date" :expenses="budget.expenses"></Expense>
           </v-card>
         </v-row>
       </v-col>
@@ -70,7 +70,48 @@ export default {
   "July", "August", "September", "October", "November", "December"]
   }),
 
+  created() {
+    this.initialize();
+  },
+
   methods: {
+    initialize() {
+      this.budgets = [
+         {
+          date: '2020-01', 
+          incomes: [
+            {
+              category: 'Salary',
+              amount: 100000
+            },
+            {
+              category: 'Renting',
+              amount: 100000
+            },
+            {
+              category: 'Vacation',
+              amount: 100000
+            },
+            {
+              category: 'Extra hours',
+              amount: 100000
+            }
+          ],
+          expenses: [
+            {
+              category: 'Housing',
+              amount: 100000,
+              description: 'Renting'
+            },
+            {
+              category: 'Food',
+              amount: '30000',
+              description: 'Supermarket'
+            }
+          ]
+        }
+      ]
+    },
     onSubmit() {
         this.budgets.push(this.budgetDate);
         this.dialog = !this.dialog;

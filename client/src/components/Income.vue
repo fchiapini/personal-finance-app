@@ -76,6 +76,17 @@
 export default {
     name: 'Income',
 
+    props: {
+      date: {
+        type: String,
+        required: true 
+      },
+      incomes: {
+        type: Array,
+        required: true
+      }
+    },
+
     data: () => ({
       dialog: false,
       headers: [
@@ -88,7 +99,6 @@ export default {
         { text: 'Amount', value: 'amount', sortable: false },
         { text: 'Actions', value: 'action', sortable: false }
       ],
-      incomes: [],
       editedIndex: -1,
       editedItem: {
         category: '',
@@ -113,32 +123,7 @@ export default {
       }
     },
 
-    created() {
-      this.initialize();
-    },
-
     methods: {
-      initialize() {
-        this.incomes = [
-          {
-            category: 'Salary',
-            amount: 100000
-          },
-          {
-            category: 'Renting',
-            amount: 100000
-          },
-          {
-            category: 'Vacation',
-            amount: 100000
-          },
-          {
-            category: 'Extra hours',
-            amount: 100000
-          }
-        ]
-      },
-
       editItem (item) {
         this.editedIndex = this.incomes.indexOf(item);
         this.editedItem = Object.assign({}, item);

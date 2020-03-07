@@ -2,8 +2,6 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <Budget></Budget>
-    <!-- <Income></Income>
-    <Expense></Expense> -->
   </div>
 </template>
 
@@ -17,8 +15,6 @@ export default {
   name: 'Home',
   components: {
     Budget
-    // Income,
-    // Expense
   }
 }
 </script>
