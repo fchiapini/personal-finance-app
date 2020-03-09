@@ -1,5 +1,5 @@
 <template>
-  <PieChart :chart-data="dataCollection" :options="chartOptions"></PieChart>
+  <PieChart :chart-data="generateChartData" :options="chartOptions"></PieChart>
 </template>
 
 <script>
@@ -20,16 +20,21 @@ export default {
   },
 
   data: () => ({
-    dataCollection: null,
-    chartOptions: { responsive: true, maintainAspectRatio: false },
+    chartOptions: { 
+      responsive: true,
+      maintainAspectRatio: false,
+      tooltips: {
+        callbacks: {
+          label: function(tooltipItem, data) {
+            return `${data['labels'][tooltipItem['index']]}: ${data['datasets'][0]['data'][tooltipItem['index']]}%`;
+          }
+        }
+      } 
+    },
     chartBackGroundColors: ['#41B883', '#E46651', '#00D8FF', '#DD1B16', '#68C2EF', '#F7A950', '#D15A63', '#2D58CC', '#34B667', '#DAC18F']
   }),
 
-  mounted() {
-    this.generateChartData();
-  },
-
-  methods: {
+  computed: {
     generateChartData() {
       const categories = this.monthlyBugdet.expenses.map(expense => expense.category);
 
@@ -46,7 +51,7 @@ export default {
         data.push(this.calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, label));
       });
 
-      this.dataCollection = {
+      return {
         labels: labels,
         datasets: [
           {
@@ -55,12 +60,16 @@ export default {
           }
         ]
       }
+    }
+  },
 
-    },
+  methods: {
     calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, category) {
-      return this.monthlyBugdet.expenses.filter(expense => expense.category === category)
+      let sumExpenseByCategory = this.monthlyBugdet.expenses.filter(expense => expense.category === category)
         .map(expense => expense.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue);
+      
+      return (sumExpenseByCategory/(sumIncomeTotal * 0.01));
     }
   }
 }
