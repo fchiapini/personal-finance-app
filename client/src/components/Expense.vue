@@ -136,7 +136,7 @@ export default {
       totalExpensesOfMonth() {
         return this.expenses
           .map(expense => expense.amount)
-          .reduce((accumulator, currentValue) => accumulator + currentValue);
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       }
     },
 

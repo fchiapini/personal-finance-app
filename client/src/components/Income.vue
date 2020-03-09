@@ -112,7 +112,7 @@ export default {
 
       totalIncomesOfMonth() {
         return this.incomes.map(income => income.amount)
-          .reduce((accumulator, currentValue) => accumulator + currentValue);
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
       }
     },
 

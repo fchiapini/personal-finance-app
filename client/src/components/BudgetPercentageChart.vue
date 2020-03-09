@@ -44,7 +44,7 @@ export default {
       let backgroundColor = [];
       let data = [];
       let sumIncomeTotal = this.monthlyBugdet.incomes.map(income => income.amount)
-          .reduce((accumulator, currentValue) => accumulator + currentValue);
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
       labels.forEach(label => {
         backgroundColor.push(this.chartBackGroundColors[labels.indexOf(label)]);
