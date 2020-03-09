@@ -1,9 +1,9 @@
 <template>
-  <PieChart :chart-data="generateChartData" :options="chartOptions"></PieChart>
+  <DoughnutChart :chart-data="generateChartData" :options="chartOptions"></DoughnutChart>
 </template>
 
 <script>
-import PieChart from './PieChart.js';
+import DoughnutChart from './DoughnutChart.js';
 
 export default {
   name: 'BudgetPercentageChart',
@@ -16,7 +16,7 @@ export default {
   },
 
   components: {
-    PieChart
+    DoughnutChart
   },
 
   data: () => ({
@@ -29,7 +29,7 @@ export default {
             return `${data['labels'][tooltipItem['index']]}: ${data['datasets'][0]['data'][tooltipItem['index']]}%`;
           }
         }
-      } 
+      }
     },
     chartBackGroundColors: ['#41B883', '#E46651', '#00D8FF', '#DD1B16', '#68C2EF', '#F7A950', '#D15A63', '#2D58CC', '#34B667', '#DAC18F']
   }),
@@ -50,6 +50,9 @@ export default {
         backgroundColor.push(this.chartBackGroundColors[labels.indexOf(label)]);
         data.push(this.calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, label));
       });
+
+      labels.push(`Month's saving`);
+      data.push(100 - data.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
 
       return {
         labels: labels,
