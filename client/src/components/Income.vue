@@ -6,14 +6,14 @@
       class="elevation-1" >
       <template v-slot:top >
         <v-toolbar flat color="white">
-          <v-toolbar-title>Income</v-toolbar-title>
+          <v-toolbar-title>Month's income: {{ totalIncomesOfMonth }}</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
             vertical>
           </v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="1000px">
+          <v-dialog v-model="dialog" max-width="600px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on="on">Add Income</v-btn>
             </template>
@@ -33,10 +33,7 @@
                     ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.amount" placeholder="0 yen" label="Amount"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-date-picker v-model="editedItem.date" type="month"></v-date-picker>
+                    <v-text-field type="number" v-model.number="editedItem.amount" label="Amount" prefix="￥"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -65,9 +62,6 @@
       >
         mdi-delete
       </v-icon>
-    </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
     </template>
     </v-data-table>
 </template>
@@ -114,6 +108,11 @@ export default {
     computed: {
       formTitle() {
         return this.editedIndex === -1 ? 'New Income' : 'Edit Income';
+      },
+
+      totalIncomesOfMonth() {
+        return this.incomes.map(income => income.amount)
+          .reduce((accumulator, currentValue) => accumulator + currentValue);
       }
     },
 

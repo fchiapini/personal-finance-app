@@ -6,14 +6,14 @@
       class="elevation-1" >
       <template v-slot:top >
         <v-toolbar flat color="white">
-          <v-toolbar-title>Expense</v-toolbar-title>
+          <v-toolbar-title>Month's expense: {{ totalExpensesOfMonth }}</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
             vertical>
           </v-divider>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="1000px">
+          <v-dialog v-model="dialog" max-width="600px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on="on">Add Expense</v-btn>
             </template>
@@ -28,7 +28,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-select
                       v-model="editedItem.category"
-                      :items="categories"
+                      :items="categoriesList"
                       label="Category expense"
                     ></v-select>
                   </v-col>
@@ -40,7 +40,7 @@
                     ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.amount" placeholder="0 yen" label="Amount"></v-text-field>
+                    <v-text-field type="number" v-model.number="editedItem.amount" placeholder="0 yen" label="Amount"></v-text-field>
                   </v-col>
                 </v-row>
               </v-container>
@@ -70,9 +70,6 @@
         mdi-delete
       </v-icon>
     </template>
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">Reset</v-btn>
-    </template>
     </v-data-table>
 </template>
 
@@ -101,7 +98,7 @@ export default {
           value: 'category'
         },
         { text: 'Amount', value: 'amount', sortable: false },
-        { text: 'Description', value: 'amount', sortable: false },
+        { text: 'Description', value: 'description', sortable: false },
         { text: 'Actions', value: 'action', sortable: false }
       ],
       editedIndex: -1,
@@ -115,7 +112,7 @@ export default {
         amount: 0,
         description: ''
       },
-      categories: ['Housing', 'Transport', 'Food', 'Health', 'Education', 'Clothing', 'Personal care', 'Leisure', 'Taxes', 'Others'],
+      categories: ['Housing', 'Transport', 'Food', 'Health', 'Education', 'Clothing', 'Personal care', 'Leisure', 'Tax', 'Others'],
       descriptions: [
           'Renting', 'Housing fee', 'House instalment', 'Housing insurance', 
           'House cleaning', 'Car instalment', 'Car insurance', 'Parking lot fee',
@@ -129,7 +126,17 @@ export default {
 
     computed: {
       formTitle() {
-        return this.editedIndex === -1 ? 'Add Expense' : 'Edit Expense';
+        return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense';
+      },
+
+      categoriesList() {
+        return this.categories.concat().sort();
+      },
+
+      totalExpensesOfMonth() {
+        return this.expenses
+          .map(expense => expense.amount)
+          .reduce((accumulator, currentValue) => accumulator + currentValue);
       }
     },
 

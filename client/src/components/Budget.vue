@@ -40,9 +40,10 @@
             outlined
             tile
           >
-            {{ budget.date }}
-            <Income :date="budget.date" :incomes="budget.incomes"></Income>
-            <Expense :date="budget.date" :expenses="budget.expenses"></Expense>
+            <span>{{ budget.date }}</span>
+            <Income :date="budget.date" :incomes="budget.incomes" ></Income>
+            <Expense :date="budget.date" :expenses="budget.expenses" ></Expense>
+            <BudgetPercentageChart :monthlyBugdet="budget"></BudgetPercentageChart>
           </v-card>
         </v-row>
       </v-col>
@@ -51,23 +52,33 @@
 </template>
 
 <script>
-import Income from './Income';
-import Expense from './Expense'
+import Income from './Income.vue';
+import Expense from './Expense.vue';
+import BudgetPercentageChart from './BudgetPercentageChart.vue';
+
+class Budget {
+  constructor(date, incomes=[], expenses=[]) {
+    this.date = date;
+    this.incomes = incomes;
+    this.expenses = expenses;
+  }
+}
 
 export default {
   name: 'Budget',
 
   components: {
     Income,
-    Expense
+    Expense,
+    BudgetPercentageChart
   },
 
   data: () => ({
     dialog: false,
     budgetDate: null,
     budgets: [],
-    monthName: ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"]
+    monthName: ['January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December']
   }),
 
   created() {
@@ -76,44 +87,46 @@ export default {
 
   methods: {
     initialize() {
-      this.budgets = [
-         {
-          date: '2020-01', 
-          incomes: [
-            {
-              category: 'Salary',
-              amount: 100000
-            },
-            {
-              category: 'Renting',
-              amount: 100000
-            },
-            {
-              category: 'Vacation',
-              amount: 100000
-            },
-            {
-              category: 'Extra hours',
-              amount: 100000
-            }
-          ],
-          expenses: [
-            {
-              category: 'Housing',
-              amount: 100000,
-              description: 'Renting'
-            },
-            {
-              category: 'Food',
-              amount: '30000',
-              description: 'Supermarket'
-            }
-          ]
-        }
-      ]
+      this.budgets = [ new Budget('2020-01',
+        [
+          {
+            category: 'Salary',
+            amount: 100000
+          },
+          {
+            category: 'Renting',
+            amount: 100000
+          },
+          {
+            category: 'Vacation',
+            amount: 100000
+          },
+          {
+            category: 'Extra hours',
+            amount: 100000
+          }
+        ], 
+        [
+          {
+            category: 'Housing',
+            amount: 100000,
+            description: 'Renting'
+          },
+          {
+            category: 'Food',
+            amount: 30000,
+            description: 'Supermarket'
+          },
+          {
+            category: 'Housing',
+            amount: 30000,
+            description: 'Supermarket'
+          }
+        ])
+      ];
     },
     onSubmit() {
-        this.budgets.push(this.budgetDate);
+        this.budgets.push(new Budget(this.budgetDate));
         this.dialog = !this.dialog;
         this.budgetDate = null;
     }
