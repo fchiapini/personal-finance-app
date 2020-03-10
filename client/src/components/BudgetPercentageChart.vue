@@ -23,6 +23,9 @@ export default {
     chartOptions: { 
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        animateRotate: true
+      },
       tooltips: {
         callbacks: {
           label: function(tooltipItem, data) {

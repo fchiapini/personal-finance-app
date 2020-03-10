@@ -6,7 +6,7 @@
       class="elevation-1" >
       <template v-slot:top >
         <v-toolbar flat color="white">
-          <v-toolbar-title>Month's expense: {{ totalExpensesOfMonth }}</v-toolbar-title>
+          <v-toolbar-title>Expense: {{ totalExpensesOfMonth }}</v-toolbar-title>
           <v-divider
             class="mx-4"
             inset
