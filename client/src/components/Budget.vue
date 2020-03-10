@@ -1,9 +1,11 @@
 <template>
   <v-container fluid>
+
     <v-row justify="end">
       <v-dialog v-model="dialog" persistent max-width="1000px" @submit.prevent="onSubmit">
         <template v-slot:activator="{ on }">
           <v-btn color="primary" dark v-on="on">New Budget</v-btn>
+          <v-btn color="primary" @click="logout" dark >Log out</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -69,6 +71,7 @@
 import Income from './Income.vue';
 import Expense from './Expense.vue';
 import BudgetPercentageChart from './BudgetPercentageChart.vue';
+import firebase from 'firebase/app';
 
 class Budget {
   constructor(date, incomes=[], expenses=[]) {
@@ -88,6 +91,7 @@ export default {
   },
 
   data: () => ({
+    user: {},
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
@@ -98,6 +102,7 @@ export default {
   }),
 
   created() {
+    this.user = firebase.auth().currentUser;
     this.initialize();
   },
 
@@ -154,6 +159,11 @@ export default {
     },
     loadSelectedBudget() {
       this.selectedBudget = this.budgets.filter((budget) => budget.date === this.selectedBudgetDate)[0];
+    },
+    logout: function() {
+      firebase.auth().signOut().then(() => {
+        this.$router.replace('login')
+      })
     }
   },
 

@@ -1,31 +1,24 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-spacer></v-spacer>
-    </v-app-bar>
-
+    <Navbar />
     <v-content>
-      <Budget></Budget>
+      <router-view></router-view>
     </v-content>
   </v-app>
-</template>
+</template>  
 
 <script>
-import Budget from './components/Budget';
+import Navbar from '@/components/Navbar.vue';
 
 export default {
   name: 'App',
 
   components: {
-    Budget
+    Navbar
   },
 
   data: () => ({
-    //
+
   }),
 };
 </script>
