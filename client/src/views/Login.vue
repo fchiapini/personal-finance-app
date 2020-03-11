@@ -6,23 +6,25 @@
 </template>
 
 <script>
-  import firebase from 'firebase/app';
+  import { firebaseApp, GOOGLE_AUTH_PROVIDER_ID, EMAIL_AUTH_PROVIDER_ID } from '../firebase/firebaseinit.js';
   import * as firebaseui from 'firebaseui';
   import "firebaseui/dist/firebaseui.css";
 
   export default {
     name: 'Login',
+
     data: () => ({
       ui: null
     }),
+    
     mounted() {
-      this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
+      this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebaseApp.auth());
       const uiConfig = {
         signInSuccessUrl: "/home", // This redirect can be achived by route using callback.
         signInFlow: "popup",
         signInOptions: [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          firebase.auth.EmailAuthProvider.PROVIDER_ID
+          GOOGLE_AUTH_PROVIDER_ID,
+          EMAIL_AUTH_PROVIDER_ID
         ]
       };
       this.ui.start("#firebaseui-auth-container", uiConfig);

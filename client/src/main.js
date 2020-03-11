@@ -3,16 +3,14 @@ import App from './App.vue';
 import router from './router';
 import vuetify from './plugins/vuetify';
 import axios from 'axios';
-import firebase from 'firebase/app';
-import { firebaseConfig } from './helpers/firebaseConfig.js';
+import { firebaseApp } from './firebase/firebaseinit.js';
 
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 
 let app = '';
-firebase.initializeApp(firebaseConfig);
 
-firebase.auth().onAuthStateChanged(() => {
+firebaseApp.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
       router,

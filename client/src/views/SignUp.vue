@@ -9,9 +9,10 @@
 </template>
 
  <script>
-  import firebase from 'firebase/app';
+  import { firebaseApp } from '../firebase/firebaseinit.js';
   export default {
     name: 'signUp',
+    
     data() {
       return {
         email: '',
@@ -20,7 +21,7 @@
     },
     methods: {
       signUp: function() {
-        firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
+        firebaseApp.auth().createUserWithEmailAndPassword(this.email, this.password).then(
           () => {
             this.$router.replace('home')
           },

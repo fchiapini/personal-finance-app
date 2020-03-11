@@ -16,6 +16,7 @@
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-router": "^3.1.5",
+    "vuefire": "^2.2.1",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {

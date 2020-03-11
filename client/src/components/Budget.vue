@@ -67,16 +67,27 @@
 </template>
 
 <script>
+import { firebaseApp } from '../firebase/firebaseinit.js';
+import { db } from '../firebase/db.js'
 import Income from './Income.vue';
 import Expense from './Expense.vue';
 import BudgetPercentageChart from './BudgetPercentageChart.vue';
-import firebase from 'firebase/app';
 
 class Budget {
-  constructor(date, incomes=[], expenses=[]) {
+  constructor(userId, date, incomes=[], expenses=[]) {
+    this.userId = userId;
     this.date = date;
     this.incomes = incomes;
     this.expenses = expenses;
+  }
+}
+
+class User {
+  constructor(id, name, email, image) {
+    this.id = id;
+    this.name = name;
+    this.email = email;
+    this.image = image;
   }
 }
 
@@ -90,7 +101,7 @@ export default {
   },
 
   data: () => ({
-    user: {},
+    user: null,
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
@@ -101,9 +112,9 @@ export default {
   }),
 
   created() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.user = user;
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if(user) {
+        this.user = new User(user.uid, user.displayName, user.email, user.photoURL);
         this.initialize();
       }
     });
@@ -111,50 +122,18 @@ export default {
 
   methods: {
     initialize() {
-      this.budgets = [ new Budget('2020-01',
-        [
-          {
-            category: 'Salary',
-            amount: 100000
-          },
-          {
-            category: 'Renting',
-            amount: 100000
-          },
-          {
-            category: 'Vacation',
-            amount: 100000
-          },
-          {
-            category: 'Extra hours',
-            amount: 100000
-          }
-        ], 
-        [
-          {
-            category: 'Housing',
-            amount: 100000,
-            description: 'Renting'
-          },
-          {
-            category: 'Food',
-            amount: 30000,
-            description: 'Supermarket'
-          },
-          {
-            category: 'Housing',
-            amount: 30000,
-            description: 'Supermarket'
-          }
-        ])
-      ];
-
-      this.selectedBudget = this.budgets.concat().sort()[0];
+      db.collection('budgets')
+        .where('userId', '==', this.user.id)
+        .get()
+        .then(querySnapshot => {
+          this.budgets = querySnapshot.docs.map(doc => doc.data());
+          this.selectedBudget = this.budgets.concat().sort()[0];
+      });
     },
     onSubmit() {
-        this.budgets.push(new Budget(this.budgetDate));
-        this.dialog = !this.dialog;
-        this.budgetDate = null;
+      this.budgets.push(new Budget(this.budgetDate));
+      this.dialog = !this.dialog;
+      this.budgetDate = null;
     },
     formatMonthYearDate(date) {
       let budgetDate = new Date(date);
@@ -164,8 +143,8 @@ export default {
       this.selectedBudget = this.budgets.filter((budget) => budget.date === this.selectedBudgetDate)[0];
     },
     logout: function() {
-      firebase.auth().signOut().then(() => {
-        this.$router.replace('login')
+      firebaseApp.auth().signOut().then(() => {
+        this.$router.replace('login');
       })
     }
   },
@@ -179,10 +158,10 @@ export default {
     },
     budgetDateList() {
       return this.budgets.map((budget) => {
-          return { 
-            text: this.formatMonthYearDate(budget.date), value: budget.date 
-          }
-        }).sort((a, b) => (a.value > b.value) ? 1 : -1);
+        return { 
+          text: this.formatMonthYearDate(budget.date), value: budget.date 
+        }
+      }).sort((a, b) => (a.value > b.value) ? 1 : -1);
     }
   }
 }
