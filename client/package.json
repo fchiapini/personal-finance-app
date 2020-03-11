@@ -12,6 +12,7 @@
     "chart.js": "^2.9.3",
     "core-js": "^3.6.4",
     "firebase": "^7.10.0",
+    "firebaseui": "^4.4.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-router": "^3.1.5",

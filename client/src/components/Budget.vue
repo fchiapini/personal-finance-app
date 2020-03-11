@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-
     <v-row justify="end">
       <v-dialog v-model="dialog" persistent max-width="1000px" @submit.prevent="onSubmit">
         <template v-slot:activator="{ on }">
@@ -102,8 +101,12 @@ export default {
   }),
 
   created() {
-    this.user = firebase.auth().currentUser;
-    this.initialize();
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = user;
+        this.initialize();
+      }
+    });
   },
 
   methods: {
