@@ -1,8 +1,8 @@
-import Vue from 'vue';
-import { firestorePlugin } from 'vuefire';
-import { firebaseApp } from './firebaseinit.js';
-import 'firebase/firestore';
+import Vue from 'vue'
+import { firestorePlugin } from 'vuefire'
+import { firebaseApp } from './firebaseinit.js'
+import 'firebase/firestore'
 
-Vue.use(firestorePlugin);
+Vue.use(firestorePlugin)
 
-export const db = firebaseApp.firestore();
+export const db = firebaseApp.firestore()
