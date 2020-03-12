@@ -1,9 +1,12 @@
 <template>
-  <DoughnutChart :chart-data="generateChartData" :options="chartOptions"></DoughnutChart>
+  <DoughnutChart
+    :chart-data="generateChartData"
+    :options="chartOptions"
+  ></DoughnutChart>
 </template>
 
 <script>
-import DoughnutChart from './DoughnutChart.js';
+import DoughnutChart from './DoughnutChart.js'
 
 export default {
   name: 'BudgetPercentageChart',
@@ -20,7 +23,7 @@ export default {
   },
 
   data: () => ({
-    chartOptions: { 
+    chartOptions: {
       responsive: true,
       maintainAspectRatio: false,
       animation: {
@@ -29,33 +32,57 @@ export default {
       tooltips: {
         callbacks: {
           label: function(tooltipItem, data) {
-            return `${data['labels'][tooltipItem['index']]}: ${data['datasets'][0]['data'][tooltipItem['index']]}%`;
+            return `${data['labels'][tooltipItem['index']]}: ${
+              data['datasets'][0]['data'][tooltipItem['index']]
+            }%`
           }
         }
       }
     },
-    chartBackGroundColors: ['#41B883', '#E46651', '#00D8FF', '#DD1B16', '#68C2EF', '#F7A950', '#D15A63', '#2D58CC', '#34B667', '#DAC18F']
+    chartBackGroundColors: [
+      '#41B883',
+      '#E46651',
+      '#00D8FF',
+      '#DD1B16',
+      '#68C2EF',
+      '#F7A950',
+      '#D15A63',
+      '#2D58CC',
+      '#34B667',
+      '#DAC18F'
+    ]
   }),
 
   computed: {
     generateChartData() {
-      const categories = this.monthlyBugdet.expenses.map(expense => expense.category);
+      const categories = this.monthlyBugdet.expenses.map(
+        expense => expense.category
+      )
 
       // remove duplicated categories
-      const labels = categories.filter((a,b) => categories.indexOf(a) === b);
+      const labels = categories.filter((a, b) => categories.indexOf(a) === b)
 
-      let backgroundColor = [];
-      let data = [];
-      let sumIncomeTotal = this.monthlyBugdet.incomes.map(income => income.amount)
-          .reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+      let backgroundColor = []
+      let data = []
+      let sumIncomeTotal = this.monthlyBugdet.incomes
+        .map(income => income.amount)
+        .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 
       labels.forEach(label => {
-        backgroundColor.push(this.chartBackGroundColors[labels.indexOf(label)]);
-        data.push(this.calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, label));
-      });
+        backgroundColor.push(this.chartBackGroundColors[labels.indexOf(label)])
+        data.push(
+          this.calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, label)
+        )
+      })
 
-      labels.push(`Month's saving`);
-      data.push(100 - data.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+      labels.push(`Month's saving`)
+      data.push(
+        100 -
+          data.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0
+          )
+      )
 
       return {
         labels: labels,
@@ -71,11 +98,12 @@ export default {
 
   methods: {
     calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, category) {
-      let sumExpenseByCategory = this.monthlyBugdet.expenses.filter(expense => expense.category === category)
+      let sumExpenseByCategory = this.monthlyBugdet.expenses
+        .filter(expense => expense.category === category)
         .map(expense => expense.amount)
-        .reduce((accumulator, currentValue) => accumulator + currentValue);
-      
-      return (sumExpenseByCategory/(sumIncomeTotal * 0.01));
+        .reduce((accumulator, currentValue) => accumulator + currentValue)
+
+      return Number((sumExpenseByCategory / (sumIncomeTotal * 0.01)).toFixed(2))
     }
   }
 }

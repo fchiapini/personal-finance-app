@@ -8,8 +8,7 @@
         @submit.prevent="onSubmit"
       >
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" dark v-on="on">New Budget</v-btn>
-          <v-btn color="primary" @click="logout" dark>Log out</v-btn>
+          <v-btn outlined color="primary" dark v-on="on">New Budget</v-btn>
         </template>
         <v-card>
           <v-card-title>
@@ -37,10 +36,9 @@
         </v-card>
       </v-dialog>
     </v-row>
-    <v-col class="d-flex" cols="12" sm="6">
+    <v-col v-if="currentBudget" class="d-flex" cols="12" sm="6">
       <v-select
         v-model="selectedBudgetDate"
-        v-on:change="loadSelectedBudget"
         :items="budgetDateList"
         item-text="text"
         item-value="value"
@@ -49,9 +47,9 @@
       ></v-select>
     </v-col>
     <v-row>
-      <v-col :cols="12">
+      <v-col v-if="currentBudget" :cols="12">
         <v-card class="ma-3 pa-6" outlined tile>
-          <span>Budget for {{}}</span>
+          <span>Budget for {{ monthlyBudgetTitle }}</span>
           <BudgetPercentageChart
             :monthlyBugdet="currentBudget"
           ></BudgetPercentageChart>
@@ -86,15 +84,6 @@ import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
 
-class User {
-  constructor(id, name, email, image) {
-    this.id = id
-    this.name = name
-    this.email = email
-    this.image = image
-  }
-}
-
 export default {
   name: 'Budget',
 
@@ -105,11 +94,10 @@ export default {
   },
 
   data: () => ({
-    user: null,
+    userId: null,
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
-    selectedBudget: null,
     budgets: [],
     months: [
       'January',
@@ -138,21 +126,12 @@ export default {
   created() {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
-        this.user = new User(
-          user.uid,
-          user.displayName,
-          user.email,
-          user.photoURL
-        )
-        this.initialize()
+        this.userId = user.uid
       }
     })
   },
 
   methods: {
-    initialize() {
-      this.selectedBudget = this.budgets.concat().sort()[0]
-    },
     onSubmit() {
       db.collection('budgets').add({
         date: this.budgetDate,
@@ -166,19 +145,6 @@ export default {
     formatMonthYearDate(date) {
       let budgetDate = new Date(date)
       return `${this.months[budgetDate.getMonth()]} ${budgetDate.getFullYear()}`
-    },
-    loadSelectedBudget() {
-      this.selectedBudget = this.budgets.filter(
-        budget => budget.date === this.selectedBudgetDate
-      )[0]
-    },
-    logout: function() {
-      firebaseApp
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$router.replace('login')
-        })
     },
     addItem: function(params) {
       const { date, newItem, budgetAttr } = params
@@ -210,11 +176,17 @@ export default {
 
   computed: {
     currentBudget() {
-      return this.selectedBudgetDate === null
-        ? this.budgets[0]
-        : this.budgets.filter(
-            budget => budget.date === this.selectedBudgetDate
-          )[0]
+      if (this.selectedBudgetDate) {
+        return this.budgets.find(
+          budget => budget.date === this.selectedBudgetDate
+        )
+      }
+      let latestDate = this.budgets
+        .map(budget => budget.date)
+        .reduce((a, b) => {
+          return a > b ? a : b
+        }, '')
+      return this.budgets.find(budget => budget.date === latestDate)
     },
     monthlyBudgetTitle() {
       return this.formatMonthYearDate(this.currentBudget.date)

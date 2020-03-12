@@ -18,7 +18,7 @@ const routes = [
   },
   {
     path: '/home',
-    name:'Home',
+    name: 'Home',
     component: Home,
     meta: {
       requiresAuth: true
@@ -40,7 +40,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
 
@@ -50,12 +51,12 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const currentUser = firebase.auth().currentUser;
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const currentUser = firebase.auth().currentUser
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (requiresAuth && !currentUser) next('login');
-  else if (!requiresAuth && currentUser) next('home');
-  else next();
+  if (requiresAuth && !currentUser) next('login')
+  else if (!requiresAuth && currentUser) next('home')
+  else next()
 })
 
 export default router

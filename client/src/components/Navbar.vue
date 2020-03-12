@@ -1,30 +1,61 @@
 <template>
-  <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-toolbar-title>My personal finance</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <router-link to="/">
-        <v-btn icon>
-          Home
-        </v-btn>
-      </router-link>
-      <router-link to="/about">
-        <v-btn icon>
-          About
-        </v-btn>
-      </router-link>
+  <v-app-bar v-if="user" app color="primary" dark>
+    <v-toolbar-title>My personal finance</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-navigation-drawer color="primary" absolute permanent right>
+      <template v-slot:prepend>
+        <v-list-item>
+          <v-list-item-avatar>
+            <img :src="user.image" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>{{ user.name }}</v-list-item-title>
+            <a @click="logout">
+              <v-list-item-subtitle>
+                Log out
+              </v-list-item-subtitle>
+            </a>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-navigation-drawer>
   </v-app-bar>
 </template>
 
 <script>
-    export default {
-        
+import { firebaseApp } from '../firebase/firebaseinit.js'
+import User from '../models/user.js'
+
+export default {
+  data: () => ({
+    user: null
+  }),
+
+  created() {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.user = new User(
+          user.uid,
+          user.displayName,
+          user.email,
+          user.photoURL
+        )
+      }
+    })
+  },
+
+  methods: {
+    logout: function() {
+      this.user = null
+      firebaseApp
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace('login')
+        })
     }
+  }
+}
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

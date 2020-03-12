@@ -12,7 +12,7 @@
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on"
+            <v-btn outlined color="primary" dark class="mb-2" v-on="on"
               >Add Expense</v-btn
             >
           </template>
