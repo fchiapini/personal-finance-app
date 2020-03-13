@@ -7,8 +7,9 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title>Expense: {{ totalExpensesOfMonth }}</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical> </v-divider>
+        <v-toolbar-title
+          >Expense: {{ totalExpensesOfMonth | currency }}</v-toolbar-title
+        >
         <v-spacer></v-spacer>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
@@ -42,7 +43,6 @@
                     <v-text-field
                       type="number"
                       v-model.number="editedItem.amount"
-                      placeholder="0 yen"
                       label="Amount"
                     ></v-text-field>
                   </v-col>
@@ -58,6 +58,9 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+    </template>
+    <template v-slot:item.amount="{ item }">
+      {{ item.amount | currency }}
     </template>
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">

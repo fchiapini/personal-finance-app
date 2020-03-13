@@ -1,15 +1,16 @@
-import Vue from 'vue';
-import App from './App.vue';
-import router from './router';
-import vuetify from './plugins/vuetify';
-import axios from 'axios';
-import { firebaseApp } from './firebase/firebaseinit.js';
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import vuetify from './plugins/vuetify'
+import VueCurrencyFilter from 'vue-currency-filter'
+import { CURRENCY_OPTIONS } from './plugins/vuecurrencyfilter'
+import { firebaseApp } from './firebase/firebaseinit.js'
 
-Vue.prototype.$axios = axios;
-Vue.config.productionTip = false;
+Vue.config.productionTip = false
 
-let app = '';
+Vue.use(VueCurrencyFilter, CURRENCY_OPTIONS['yen'])
 
+let app = ''
 firebaseApp.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
@@ -18,4 +19,4 @@ firebaseApp.auth().onAuthStateChanged(() => {
       render: h => h(App)
     }).$mount('#app')
   }
-});
+})

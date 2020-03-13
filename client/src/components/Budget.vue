@@ -45,16 +45,22 @@
         label="Select your month's budget"
         outlined
       ></v-select>
+      <v-select
+        v-model="selectedCurrency"
+        :items="currencies"
+        label="Your currency"
+        outlined
+      ></v-select>
     </v-col>
     <v-row>
       <v-col v-if="currentBudget" :cols="12">
-        <v-card class="ma-3 pa-6" outlined tile>
+        <v-card class="ma-3 pa-6">
           <span>Budget for {{ monthlyBudgetTitle }}</span>
           <BudgetPercentageChart
             :monthlyBugdet="currentBudget"
           ></BudgetPercentageChart>
         </v-card>
-        <v-card class="ma-3 pa-6" outlined tile>
+        <v-card class="ma-3 pa-6">
           <Income
             :date="currentBudget.date"
             :incomes="currentBudget.incomes"
@@ -63,7 +69,7 @@
             @delete-item="deleteItem"
           ></Income>
         </v-card>
-        <v-card class="ma-3 pa-6" outlined tile>
+        <v-card class="ma-3 pa-6">
           <Expense
             :date="currentBudget.date"
             :expenses="currentBudget.expenses"
@@ -83,6 +89,7 @@ import { db } from '../firebase/db.js'
 import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
+import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
 
 export default {
   name: 'Budget',
@@ -98,6 +105,7 @@ export default {
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
+    selectedCurrency: 'yen',
     budgets: [],
     months: [
       'January',
@@ -112,7 +120,8 @@ export default {
       'October',
       'November',
       'December'
-    ]
+    ],
+    currencies: ['dollar', 'yen', 'brazilian real', 'euro']
   }),
 
   firestore() {
@@ -127,6 +136,7 @@ export default {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         this.userId = user.uid
+        this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
       }
     })
   },
@@ -200,6 +210,12 @@ export default {
           }
         })
         .sort((a, b) => (a.value > b.value ? 1 : -1))
+    }
+  },
+
+  watch: {
+    selectedCurrency() {
+      this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
     }
   }
 }
