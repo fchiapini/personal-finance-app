@@ -1,11 +1,57 @@
 <template>
-  <div class="sign-up">
-    <p>Let's create a new account !</p>
-    <input type="text" v-model="email" placeholder="Email" /><br />
-    <input type="password" v-model="password" placeholder="Password" /><br />
-    <button @click="signUp">Sign Up</button>
-    <span>or go back to <router-link to="/login">login</router-link>.</span>
-  </div>
+  <v-container>
+    <v-layout row>
+      <v-flex xs12 sm6 offset-sm3>
+        <v-card>
+          <v-card-text>
+            <v-container>
+              <form>
+                <v-layout row>
+                  <v-flex sx12>
+                    <v-img class="logo" src="../assets/logo.png"></v-img>
+                    <v-text-field
+                      name="userEmail"
+                      label="Email"
+                      v-model="email"
+                      type="email"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex sx12>
+                    <v-text-field
+                      name="password"
+                      label="Password"
+                      v-model="password"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex sx12>
+                    <v-text-field
+                      name="confirmPassword"
+                      label="Confirm Password"
+                      v-model="confirmPassword"
+                      type="password"
+                      :rules="[comparePasswords]"
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row>
+                  <v-flex xs12>
+                    <v-btn @click="onSignUp">Sign up</v-btn>
+                  </v-flex>
+                </v-layout>
+              </form>
+            </v-container>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -16,11 +62,21 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     }
   },
+
+  computed: {
+    comparePasswords() {
+      return this.password !== this.confirmPassword
+        ? 'Password do not match'
+        : ''
+    }
+  },
+
   methods: {
-    signUp: function() {
+    onSignUp: function() {
       firebaseApp
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
@@ -37,4 +93,11 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="sass">
+.logo
+  width: 150px
+  height: 150px
+  border-radius: 50%
+  margin-bottom: 30px
+  margin: auto
+</style>

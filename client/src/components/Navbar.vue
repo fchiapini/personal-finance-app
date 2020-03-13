@@ -11,9 +11,7 @@
           <v-list-item-content>
             <v-list-item-title>{{ user.name }}</v-list-item-title>
             <a @click="logout">
-              <v-list-item-subtitle>
-                Log out
-              </v-list-item-subtitle>
+              <v-list-item-subtitle>Log out</v-list-item-subtitle>
             </a>
           </v-list-item-content>
         </v-list-item>
@@ -58,4 +56,9 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="sass" scoped>
+.logo
+  width: 70px
+  height: 70px
+  border-radius: 50%
+</style>
