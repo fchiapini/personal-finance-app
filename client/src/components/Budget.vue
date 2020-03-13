@@ -121,7 +121,7 @@ export default {
       'November',
       'December'
     ],
-    currencies: ['dollar', 'yen', 'brazilian real', 'euro']
+    currencies: ['dollar', 'yen', 'real', 'euro']
   }),
 
   firestore() {
@@ -147,7 +147,7 @@ export default {
         date: this.budgetDate,
         incomes: [],
         expenses: [],
-        userId: this.user.id
+        userId: this.userId
       })
       this.dialog = !this.dialog
       this.budgetDate = null

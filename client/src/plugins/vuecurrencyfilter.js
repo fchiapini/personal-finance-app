@@ -15,8 +15,16 @@ const CURRENCY_OPTIONS = {
     symbolPosition: 'front',
     symbolSpacing: true
   },
-  'brazilian real': {
+  real: {
     symbol: 'R$',
+    thousandsSeparator: '.',
+    fractionCount: 2,
+    fractionSeparator: ',',
+    symbolPosition: 'front',
+    symbolSpacing: true
+  },
+  euro: {
+    symbol: '€',
     thousandsSeparator: '.',
     fractionCount: 2,
     fractionSeparator: ',',
