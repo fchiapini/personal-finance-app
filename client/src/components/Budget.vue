@@ -181,9 +181,7 @@ export default {
         .collection('budgets')
         .doc(document.id)
         .set(document)
-        .then(() => {
-          console.log('budget expenses updated!')
-        })
+        .then(() => {})
     }
   },
 
