@@ -7,15 +7,14 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title
-          >Income: {{ totalIncomesOfMonth | currency }}</v-toolbar-title
-        >
-        <v-spacer></v-spacer>
+        <v-toolbar-title>
+          Income: {{ totalIncomesOfMonth | currency }}
+        </v-toolbar-title>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
-            <v-btn outlined color="primary" dark class="mb-2" v-on="on"
-              >Add Income</v-btn
-            >
+            <v-btn outlined color="primary" dark class="mb-2" v-on="on">
+              Add Income
+            </v-btn>
           </template>
           <v-card>
             <v-card-title>

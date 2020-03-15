@@ -7,15 +7,14 @@
   >
     <template v-slot:top>
       <v-toolbar flat color="white">
-        <v-toolbar-title
-          >Expense: {{ totalExpensesOfMonth | currency }}</v-toolbar-title
-        >
-        <v-spacer></v-spacer>
+        <v-toolbar-title>
+          Expense: {{ totalExpensesOfMonth | currency }}
+        </v-toolbar-title>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
-            <v-btn outlined color="primary" dark class="mb-2" v-on="on"
-              >Add Expense</v-btn
-            >
+            <v-btn outlined color="primary" dark class="mb-2" v-on="on">
+              Add Expense
+            </v-btn>
           </template>
           <v-card>
             <v-card-title>
@@ -63,12 +62,8 @@
       {{ item.amount | currency }}
     </template>
     <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">
-        mdi-pencil
-      </v-icon>
-      <v-icon small @click="deleteItem(item)">
-        mdi-delete
-      </v-icon>
+      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
     </template>
   </v-data-table>
 </template>
@@ -228,7 +223,7 @@ export default {
       } else {
         this.$emit('add-item', {
           date: this.date,
-          expense: this.editedItem,
+          newItem: this.editedItem,
           budgetAttr: 'expenses'
         })
       }

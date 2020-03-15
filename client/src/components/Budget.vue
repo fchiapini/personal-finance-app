@@ -28,9 +28,9 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false"
-              >Close</v-btn
-            >
+            <v-btn color="blue darken-1" text @click="dialog = false">
+              Close
+            </v-btn>
             <v-btn color="blue darken-1" text @click="onSubmit">Save</v-btn>
           </v-card-actions>
         </v-card>
@@ -101,7 +101,6 @@ export default {
   },
 
   data: () => ({
-    userId: null,
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
@@ -127,15 +126,15 @@ export default {
   firestore() {
     return {
       budgets: db
+        .collection('users')
+        .doc(firebaseApp.auth().currentUser.uid)
         .collection('budgets')
-        .where('userId', '==', firebaseApp.auth().currentUser.uid)
     }
   },
 
   created() {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
-        this.userId = user.uid
         this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
       }
     })
@@ -143,12 +142,14 @@ export default {
 
   methods: {
     onSubmit() {
-      db.collection('budgets').add({
-        date: this.budgetDate,
-        incomes: [],
-        expenses: [],
-        userId: this.userId
-      })
+      db.collection('users')
+        .doc(firebaseApp.auth().currentUser.uid)
+        .collection('budgets')
+        .add({
+          date: this.budgetDate,
+          incomes: [],
+          expenses: []
+        })
       this.dialog = !this.dialog
       this.budgetDate = null
     },
@@ -175,7 +176,9 @@ export default {
       this.updateDb(updateBudget)
     },
     updateDb(document) {
-      db.collection('budgets')
+      db.collection('users')
+        .doc(firebaseApp.currentUser.uid)
+        .collection('budgets')
         .doc(document.id)
         .set(document)
         .then(() => {
