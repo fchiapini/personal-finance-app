@@ -22,7 +22,7 @@
 
 <script>
 import { firebaseApp } from '../firebase/firebaseinit.js'
-import User from '../models/user.js'
+import UserProfile from '../models/user.js'
 
 export default {
   data: () => ({
@@ -32,12 +32,7 @@ export default {
   created() {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
-        this.user = new User(
-          user.uid,
-          user.displayName,
-          user.email,
-          user.photoURL
-        )
+        this.user = new UserProfile(user.displayName, user.email, user.photoURL)
       }
     })
   },

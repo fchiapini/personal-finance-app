@@ -1,10 +1,9 @@
-class User {
-  constructor(id, name, email, image) {
-    this.id = id
+class UserProfile {
+  constructor(name, email, image) {
     this.name = name
     this.email = email
     this.image = image
   }
 }
 
-export default User
+export default UserProfile

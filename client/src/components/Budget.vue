@@ -101,6 +101,7 @@ export default {
   },
 
   data: () => ({
+    userId: null,
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
@@ -135,6 +136,7 @@ export default {
   created() {
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
+        this.userId = firebaseApp.auth().currentUser.uid
         this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
       }
     })
@@ -143,7 +145,7 @@ export default {
   methods: {
     onSubmit() {
       db.collection('users')
-        .doc(firebaseApp.auth().currentUser.uid)
+        .doc(this.userId)
         .collection('budgets')
         .add({
           date: this.budgetDate,
@@ -177,7 +179,7 @@ export default {
     },
     updateDb(document) {
       db.collection('users')
-        .doc(firebaseApp.currentUser.uid)
+        .doc(this.userId)
         .collection('budgets')
         .doc(document.id)
         .set(document)
