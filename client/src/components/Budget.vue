@@ -18,6 +18,13 @@
             <v-container>
               <v-row justify="center">
                 <v-col cols="12" sm="6" md="4">
+                  <v-text-field
+                    name="date"
+                    label="Select a date"
+                    v-model="budgetDate"
+                    :rules="[dateAlreadyCreated]"
+                    readonly
+                  ></v-text-field>
                   <v-date-picker
                     v-model="budgetDate"
                     type="month"
@@ -28,10 +35,16 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">
+            <v-btn color="blue darken-1" text @click="resetValues">
               Close
             </v-btn>
-            <v-btn color="blue darken-1" text @click="onSubmit">Save</v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              :disabled="!datePicked"
+              @click="onSubmit"
+              >Save</v-btn
+            >
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -184,6 +197,15 @@ export default {
         .doc(document.id)
         .set(document)
         .then(() => {})
+    },
+    resetValues() {
+      this.dialog = false
+      this.budgetDate = null
+    },
+    availableDate() {
+      return (
+        this.budgets.map(budget => budget.date).indexOf(this.budgetDate) === -1
+      )
     }
   },
 
@@ -213,6 +235,14 @@ export default {
           }
         })
         .sort((a, b) => (a.value > b.value ? 1 : -1))
+    },
+    datePicked() {
+      return this.budgetDate !== null && this.availableDate()
+    },
+    dateAlreadyCreated() {
+      return !this.availableDate()
+        ? 'Budget for the selected date already created!'
+        : ''
     }
   },
 
