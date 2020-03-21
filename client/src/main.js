@@ -5,6 +5,7 @@ import vuetify from './plugins/vuetify'
 import VueCurrencyFilter from 'vue-currency-filter'
 import { CURRENCY_OPTIONS } from './plugins/vuecurrencyfilter'
 import { firebaseApp } from './firebase/firebaseinit.js'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -16,6 +17,7 @@ firebaseApp.auth().onAuthStateChanged(() => {
     app = new Vue({
       router,
       vuetify,
+      store,
       render: h => h(App)
     }).$mount('#app')
   }

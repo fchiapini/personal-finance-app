@@ -34,7 +34,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-select
                       v-model="editedItem.description"
-                      :items="descriptions"
+                      :items="expenseCategoryDescriptions"
                       label="Description"
                     ></v-select>
                   </v-col>
@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Expense',
 
@@ -106,71 +107,17 @@ export default {
       category: '',
       amount: 0,
       description: ''
-    },
-    categories: [
-      'Housing',
-      'Transport',
-      'Food',
-      'Health',
-      'Education',
-      'Clothing',
-      'Personal care',
-      'Leisure',
-      'Tax',
-      'Others'
-    ],
-    descriptions: [
-      'Renting',
-      'Housing fee',
-      'House instalment',
-      'Housing insurance',
-      'House cleaning',
-      'Car instalment',
-      'Car insurance',
-      'Parking lot fee',
-      'Health insurance',
-      'Health care',
-      'School',
-      'College',
-      'Course',
-      'Housing tax',
-      'Life insurance',
-      'Electricity',
-      'Water',
-      'Phone bill',
-      'Gas',
-      'Cable/Streaming',
-      'Internet',
-      'Train/Metro',
-      'Bus',
-      'Fuel',
-      'Supermarket',
-      'Grocery shop',
-      'Bakery',
-      'Medicine',
-      'Hair',
-      'Gym',
-      'Doctor',
-      'Dentist',
-      'Hospital',
-      'Trip',
-      'Theater',
-      'Restaurant/Bar',
-      'Movie renting',
-      'Cloth',
-      'Shoes',
-      'Accessories',
-      'Gifts'
-    ]
+    }
   }),
 
   computed: {
+    ...mapState('budget', ['expenseCategories', 'expenseCategoryDescriptions']),
     formTitle() {
       return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense'
     },
 
     categoriesList() {
-      return this.categories.concat().sort()
+      return this.expenseCategories.concat().sort()
     },
 
     totalExpensesOfMonth() {
@@ -196,7 +143,7 @@ export default {
     deleteItem(item) {
       const index = this.expenses.indexOf(item)
       if (confirm('Are you sure you want to delete this item?')) {
-        this.$emit('delete-item', {
+        this.$store.dispatch('budget/deleteItem', {
           date: this.date,
           index: index,
           budgetAttr: 'expenses'
@@ -214,14 +161,14 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        this.$emit('update-item', {
+        this.$store.dispatch('budget/updateItem', {
           date: this.date,
           index: this.editedIndex,
           editedItem: this.editedItem,
           budgetAttr: 'expenses'
         })
       } else {
-        this.$emit('add-item', {
+        this.$store.dispatch('budget/addItem', {
           date: this.date,
           newItem: this.editedItem,
           budgetAttr: 'expenses'

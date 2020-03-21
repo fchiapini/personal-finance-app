@@ -27,7 +27,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-select
                       v-model="editedItem.category"
-                      :items="categories"
+                      :items="incomeCategories"
                       label="Category income"
                     ></v-select>
                   </v-col>
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Income',
 
@@ -100,19 +101,11 @@ export default {
     defaultItem: {
       category: '',
       amount: 0
-    },
-    categories: [
-      'Salary',
-      'Renting',
-      'Pension',
-      'Extra hours',
-      'Bonus',
-      'Vacation',
-      'Others'
-    ]
+    }
   }),
 
   computed: {
+    ...mapState('budget', ['incomeCategories']),
     formTitle() {
       return this.editedIndex === -1 ? 'New Income' : 'Edit Income'
     },
@@ -140,7 +133,7 @@ export default {
     deleteItem(item) {
       const index = this.incomes.indexOf(item)
       if (confirm('Are you sure you want to delete this item?')) {
-        this.$emit('delete-item', {
+        this.$store.dispatch('budget/deleteItem', {
           date: this.date,
           index: index,
           budgetAttr: 'incomes'
@@ -158,14 +151,14 @@ export default {
 
     save() {
       if (this.editedIndex > -1) {
-        this.$emit('update-item', {
+        this.$store.dispatch('budget/updateItem', {
           date: this.date,
           index: this.editedIndex,
           editedItem: this.editedItem,
           budgetAttr: 'incomes'
         })
       } else {
-        this.$emit('add-item', {
+        this.$store.dispatch('budget/addItem', {
           date: this.date,
           newItem: this.editedItem,
           budgetAttr: 'incomes'

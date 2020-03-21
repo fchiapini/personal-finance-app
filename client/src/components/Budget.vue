@@ -35,16 +35,15 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="resetValues">
-              Close
-            </v-btn>
+            <v-btn color="blue darken-1" text @click="resetValues">Close</v-btn>
             <v-btn
               color="blue darken-1"
               text
               :disabled="!datePicked"
               @click="onSubmit"
-              >Save</v-btn
             >
+              Save
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -77,18 +76,12 @@
           <Income
             :date="currentBudget.date"
             :incomes="currentBudget.incomes"
-            @add-item="addItem"
-            @update-item="updateItem"
-            @delete-item="deleteItem"
           ></Income>
         </v-card>
         <v-card class="ma-3 pa-6">
           <Expense
             :date="currentBudget.date"
             :expenses="currentBudget.expenses"
-            @add-item="addItem"
-            @update-item="updateItem"
-            @delete-item="deleteItem"
           ></Expense>
         </v-card>
       </v-col>
@@ -97,8 +90,7 @@
 </template>
 
 <script>
-import { firebaseApp } from '../firebase/firebaseinit.js'
-import { db } from '../firebase/db.js'
+import { mapState } from 'vuex'
 import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
@@ -114,89 +106,26 @@ export default {
   },
 
   data: () => ({
-    userId: null,
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
-    selectedCurrency: 'yen',
-    budgets: [],
-    months: [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ],
-    currencies: ['dollar', 'yen', 'real', 'euro']
+    selectedCurrency: 'yen'
   }),
 
-  firestore() {
-    return {
-      budgets: db
-        .collection('users')
-        .doc(firebaseApp.auth().currentUser.uid)
-        .collection('budgets')
-    }
-  },
-
   created() {
-    firebaseApp.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.userId = firebaseApp.auth().currentUser.uid
-        this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
-      }
-    })
+    this.$store.dispatch('budget/bindBudgets')
+    this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
   },
 
   methods: {
     onSubmit() {
-      db.collection('users')
-        .doc(this.userId)
-        .collection('budgets')
-        .add({
-          date: this.budgetDate,
-          incomes: [],
-          expenses: []
-        })
+      this.$store.dispatch('budget/createBudget', this.budgetDate)
       this.dialog = !this.dialog
       this.budgetDate = null
     },
     formatMonthYearDate(date) {
       let budgetDate = new Date(date)
       return `${this.months[budgetDate.getMonth()]} ${budgetDate.getFullYear()}`
-    },
-    addItem: function(params) {
-      const { date, newItem, budgetAttr } = params
-      let updateBudget = this.budgets.find(budget => budget.date === date)
-      updateBudget[budgetAttr].push(newItem)
-      this.updateDb(updateBudget)
-    },
-    updateItem(params) {
-      const { date, index, editedItem, budgetAttr } = params
-      let updateBudget = this.budgets.find(budget => budget.date === date)
-      Object.assign(updateBudget[budgetAttr][index], editedItem)
-      this.updateDb(updateBudget)
-    },
-    deleteItem(params) {
-      const { date, index, budgetAttr } = params
-      let updateBudget = this.budgets.find(budget => budget.date === date)
-      updateBudget[budgetAttr].splice(index, 1)
-      this.updateDb(updateBudget)
-    },
-    updateDb(document) {
-      db.collection('users')
-        .doc(this.userId)
-        .collection('budgets')
-        .doc(document.id)
-        .set(document)
-        .then(() => {})
     },
     resetValues() {
       this.dialog = false
@@ -210,6 +139,7 @@ export default {
   },
 
   computed: {
+    ...mapState('budget', ['budgets', 'months', 'currencies']),
     currentBudget() {
       if (this.selectedBudgetDate) {
         return this.budgets.find(

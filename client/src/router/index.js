@@ -4,25 +4,14 @@ import firebase from 'firebase/app'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '*',
-    redirect: '/login'
-  },
-  {
     path: '/',
     redirect: '/login'
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home,
-    meta: {
-      requiresAuth: true
-    }
   },
   {
     path: '/login',
@@ -30,9 +19,26 @@ const routes = [
     component: Login
   },
   {
+    path: '/home',
+    name: 'Home',
+    component: Home,
+    meta: {
+      requiresAuth: true
+    },
+    beforeEnter(routeTo, routeFrom, next) {
+      store.dispatch('user/setUserProfile').then(() => {
+        next()
+      })
+    }
+  },
+  {
     path: '/sign-up',
     name: 'SignUp',
     component: SignUp
+  },
+  {
+    path: '*',
+    redirect: '/login'
   }
 ]
 
