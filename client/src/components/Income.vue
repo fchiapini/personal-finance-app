@@ -6,21 +6,19 @@
     class="elevation-1"
   >
     <template v-slot:top>
-      <v-toolbar flat color="white">
-        <v-toolbar-title>
-          Income: {{ totalIncomesOfMonth | currency }}
-        </v-toolbar-title>
+      <v-toolbar flat color="primary" dark>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
-            <v-btn outlined color="primary" dark class="mb-2" v-on="on">
-              Add Income
+            <v-btn text class="mb-2" v-on="on">
+              <v-icon>mdi-plus</v-icon>
+              Income
             </v-btn>
           </template>
-          <v-card>
+          <v-card color="primary" dark>
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
-
+            <v-divider />
             <v-card-text>
               <v-container>
                 <v-row>
@@ -44,11 +42,15 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+              <v-btn outlined @click="close">Cancel</v-btn>
+              <v-btn outlined @click="save">Save</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-spacer />
+        <v-toolbar-title>
+          Income: {{ totalIncomesOfMonth | currency }}
+        </v-toolbar-title>
       </v-toolbar>
     </template>
     <template v-slot:item.amount="{ item }">

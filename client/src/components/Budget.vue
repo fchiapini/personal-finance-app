@@ -1,89 +1,101 @@
 <template>
   <v-container fluid>
-    <v-row justify="end">
-      <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="1000px"
-        @submit.prevent="onSubmit"
-      >
-        <template v-slot:activator="{ on }">
-          <v-btn outlined color="primary" dark v-on="on">New Budget</v-btn>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">New Budget</span>
-          </v-card-title>
-          <v-card-text>
-            <v-container>
-              <v-row justify="center">
-                <v-col cols="12" sm="6" md="4">
-                  <v-text-field
-                    name="date"
-                    label="Select a date"
-                    v-model="budgetDate"
-                    :rules="[dateAlreadyCreated]"
-                    readonly
-                  ></v-text-field>
-                  <v-date-picker
-                    v-model="budgetDate"
-                    type="month"
-                  ></v-date-picker>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="resetValues">Close</v-btn>
-            <v-btn
-              color="blue darken-1"
-              text
-              :disabled="!datePicked"
-              @click="onSubmit"
-            >
-              Save
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-row>
-    <v-col v-if="currentBudget" class="d-flex" cols="12" sm="6">
-      <v-select
-        v-model="selectedBudgetDate"
-        :items="budgetDateList"
-        item-text="text"
-        item-value="value"
-        label="Select your month's budget"
-        outlined
-      ></v-select>
-      <v-select
-        v-model="selectedCurrency"
-        :items="currencies"
-        label="Your currency"
-        outlined
-      ></v-select>
-    </v-col>
     <v-row>
-      <v-col v-if="currentBudget" :cols="12">
+      <v-col>
+        <v-dialog
+          v-model="dialog"
+          persistent
+          max-width="1000px"
+          @submit.prevent="onSubmit"
+        >
+          <template v-slot:activator="{ on }">
+            <v-btn color="primary" dark v-on="on">
+              <v-icon>mdi-plus</v-icon>
+              New Budget
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">New Budget</span>
+            </v-card-title>
+            <v-divider />
+            <v-card-text>
+              <v-container>
+                <v-row justify="center">
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      name="date"
+                      label="Select a date"
+                      v-model="budgetDate"
+                      :rules="[dateAlreadyCreated]"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker
+                      v-model="budgetDate"
+                      type="month"
+                    ></v-date-picker>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="resetValues">
+                Close
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                :disabled="!datePicked"
+                @click="onSubmit"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-col>
+      <v-col v-if="currentBudget">
+        <v-select
+          v-model="selectedBudgetDate"
+          :items="budgetDateList"
+          item-text="text"
+          item-value="value"
+          label="Month's budget"
+          outlined
+        ></v-select>
+      </v-col>
+      <v-col>
+        <v-select
+          v-model="selectedCurrency"
+          :items="currencies"
+          label="Currency"
+          outlined
+        ></v-select>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col v-if="currentBudget">
         <v-card class="ma-3 pa-6">
           <span>Budget for {{ monthlyBudgetTitle }}</span>
           <BudgetPercentageChart
             :monthlyBugdet="currentBudget"
           ></BudgetPercentageChart>
         </v-card>
-        <v-card class="ma-3 pa-6">
-          <Income
-            :date="currentBudget.date"
-            :incomes="currentBudget.incomes"
-          ></Income>
-        </v-card>
-        <v-card class="ma-3 pa-6">
-          <Expense
-            :date="currentBudget.date"
-            :expenses="currentBudget.expenses"
-          ></Expense>
-        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col v-if="currentBudget">
+        <Income
+          :date="currentBudget.date"
+          :incomes="currentBudget.incomes"
+        ></Income>
+      </v-col>
+      <v-col>
+        <Expense
+          :date="currentBudget.date"
+          :expenses="currentBudget.expenses"
+        ></Expense>
       </v-col>
     </v-row>
   </v-container>
