@@ -1,10 +1,13 @@
 <template>
   <div class="container-login">
-    <img src="../assets/logo.png" class="logo" />
-    <h2>Login</h2>
+    <img src="../assets/logo_login.png" class="logo" />
+    <h1>Login</h1>
+    <hr />
     <div id="firebaseui-auth-container"></div>
     <span>
-      <router-link to="/sign-up">Do not have an account?</router-link>
+      <router-link class="link-to-signup" to="/sign-up">
+        Do not have an account?
+      </router-link>
     </span>
   </div>
 </template>
@@ -45,25 +48,31 @@ export default {
   flex-direction: column
   width: 400px
   height: 420px
-  border: solid
-  border-color: #b3d4fc
   top: 5%
   left: 50%
+  background: #1976d2
   position: absolute
   transform: translate(-50%, 50%)
-  box-sizing: border-box
   align-items: center
-  justify-content: center
+  box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.25)
 
 .logo
   width: 150px
   height: 150px
   border-radius: 50%
-  margin-bottom: 30px
+  margin-top: 30px
+  margin-bottom: 10px
+  box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.25)
 
-.h1
+.link-to-signup
+  color: white
+
+h1
   margin: 0
-  padding: 0 0 20px
-  text-align: center
-  font-size: 22px
+  color: white
+
+hr
+  border: 0.10em solid white
+  border-radius: 5px
+  width: 20em
 </style>
