@@ -74,27 +74,45 @@
         ></v-select>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col v-if="currentBudget">
+    <v-row v-if="currentBudget">
+      <v-col>
         <v-card class="ma-3 pa-6">
-          <span>Budget for {{ monthlyBudgetTitle }}</span>
-          <BudgetPercentageChart
-            :monthlyBugdet="currentBudget"
-          ></BudgetPercentageChart>
+          <v-card-title color="primary">
+            Budget for {{ monthlyBudgetTitle }}
+          </v-card-title>
+          <v-card-text>
+            <BudgetPercentageChart
+              :monthlyBugdet="currentBudget"
+            ></BudgetPercentageChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card v-if="this.user.configuration" class="ma-3 pa-6">
+          <v-card-title color="primary">
+            Money growth throughout the year
+          </v-card-title>
+          <v-card-text>
+            <MonthlyBalanceChart
+              :yearlyBudget="yearlyBudget"
+            ></MonthlyBalanceChart>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col v-if="currentBudget">
+    <v-row v-if="currentBudget">
+      <v-col>
         <Income
           :date="currentBudget.date"
           :incomes="currentBudget.incomes"
+          :key="forceReRenderIncomeDataTableKey"
         ></Income>
       </v-col>
       <v-col>
         <Expense
           :date="currentBudget.date"
           :expenses="currentBudget.expenses"
+          :key="forceReRenderExpenseDataTableKey"
         ></Expense>
       </v-col>
     </v-row>
@@ -106,6 +124,7 @@ import { mapState } from 'vuex'
 import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
+import MonthlyBalanceChart from './MonthlyBalanceChart.vue'
 import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
 
 export default {
@@ -114,26 +133,33 @@ export default {
   components: {
     Income,
     Expense,
-    BudgetPercentageChart
+    BudgetPercentageChart,
+    MonthlyBalanceChart
   },
 
   data: () => ({
     dialog: false,
     budgetDate: null,
     selectedBudgetDate: null,
-    selectedCurrency: 'yen'
+    selectedCurrency: null,
+    forceReRenderIncomeDataTableKey: 0,
+    forceReRenderExpenseDataTableKey: 0
   }),
 
   created() {
     this.$store.dispatch('budget/bindBudgets')
-    this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
+    this.$store.dispatch('user/loadUserConfiguration').then(() => {
+      this.selectedCurrency = this.user.configuration.options.currency
+    })
   },
 
   methods: {
     onSubmit() {
-      this.$store.dispatch('budget/createBudget', this.budgetDate)
-      this.dialog = !this.dialog
-      this.budgetDate = null
+      this.$store.dispatch('budget/createBudget', this.budgetDate).then(() => {
+        this.selectedBudgetDate = this.budgetDate
+        this.dialog = !this.dialog
+        this.budgetDate = null
+      })
     },
     formatMonthYearDate(date) {
       let budgetDate = new Date(date)
@@ -147,11 +173,15 @@ export default {
       return (
         this.budgets.map(budget => budget.date).indexOf(this.budgetDate) === -1
       )
+    },
+    getYear(strDate) {
+      return strDate.substring(0, 4)
     }
   },
 
   computed: {
     ...mapState('budget', ['budgets', 'months', 'currencies']),
+    ...mapState('user', ['user']),
     currentBudget() {
       if (this.selectedBudgetDate) {
         return this.budgets.find(
@@ -185,12 +215,26 @@ export default {
       return !this.availableDate()
         ? 'Budget for the selected date already created!'
         : ''
+    },
+    yearlyBudget() {
+      return this.budgets.filter(
+        budget =>
+          this.getYear(budget.date) === this.getYear(this.currentBudget.date)
+      )
     }
   },
 
   watch: {
     selectedCurrency() {
-      this.$CurrencyFilter.setConfig(CURRENCY_OPTIONS[this.selectedCurrency])
+      this.$store
+        .dispatch('user/setUserCurrency', this.selectedCurrency)
+        .then(() => {
+          this.$CurrencyFilter.setConfig(
+            CURRENCY_OPTIONS[this.selectedCurrency]
+          )
+          this.forceReRenderIncomeDataTableKey += 1
+          this.forceReRenderExpenseDataTableKey += 1
+        })
     }
   }
 }

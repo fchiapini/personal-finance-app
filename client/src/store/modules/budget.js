@@ -107,7 +107,8 @@ export default {
       )
     }),
     createBudget({ rootState }, budgetDate) {
-      db.collection('users')
+      return db
+        .collection('users')
         .doc(rootState.user.user.id)
         .collection('budgets')
         .add({
@@ -133,6 +134,18 @@ export default {
       let updateBudget = state.budgets.find(budget => budget.date === date)
       updateBudget[budgetAttr].splice(index, 1)
       updateDb(updateBudget, rootState.user.user.id)
+    }
+  },
+
+  getters: {
+    incomeCategories(state) {
+      return state.incomeCategories.sort()
+    },
+    expenseCategories(state) {
+      return state.expenseCategories.sort()
+    },
+    expenseCategoryDescriptions(state) {
+      return state.expenseCategoryDescriptions.sort()
     }
   }
 }

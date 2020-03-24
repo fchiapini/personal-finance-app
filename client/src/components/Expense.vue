@@ -25,7 +25,7 @@
                   <v-col cols="12" sm="6" md="4">
                     <v-select
                       v-model="editedItem.category"
-                      :items="categoriesList"
+                      :items="expenseCategories"
                       label="Category expense"
                     ></v-select>
                   </v-col>
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Expense',
 
@@ -113,7 +113,10 @@ export default {
   }),
 
   computed: {
-    ...mapState('budget', ['expenseCategories', 'expenseCategoryDescriptions']),
+    ...mapGetters('budget', [
+      'expenseCategories',
+      'expenseCategoryDescriptions'
+    ]),
     formTitle() {
       return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense'
     },

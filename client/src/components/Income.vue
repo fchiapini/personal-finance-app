@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Income',
 
@@ -107,7 +107,7 @@ export default {
   }),
 
   computed: {
-    ...mapState('budget', ['incomeCategories']),
+    ...mapGetters('budget', ['incomeCategories']),
     formTitle() {
       return this.editedIndex === -1 ? 'New Income' : 'Edit Income'
     },
