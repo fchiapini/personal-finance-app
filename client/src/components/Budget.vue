@@ -90,7 +90,7 @@
       <v-col>
         <v-card v-if="this.user.configuration" class="ma-3 pa-6">
           <v-card-title color="primary">
-            Money growth throughout the year
+            Monthly balance throughout the year
           </v-card-title>
           <v-card-text>
             <MonthlyBalanceChart
