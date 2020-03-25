@@ -76,32 +76,6 @@
     </v-row>
     <v-row v-if="currentBudget">
       <v-col>
-        <v-card class="ma-3 pa-6">
-          <v-card-title color="primary">
-            Budget for {{ monthlyBudgetTitle }}
-          </v-card-title>
-          <v-card-text>
-            <BudgetPercentageChart
-              :monthlyBugdet="currentBudget"
-            ></BudgetPercentageChart>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col>
-        <v-card v-if="this.user.configuration" class="ma-3 pa-6">
-          <v-card-title color="primary">
-            Monthly balance throughout the year
-          </v-card-title>
-          <v-card-text>
-            <MonthlyBalanceChart
-              :yearlyBudget="yearlyBudget"
-            ></MonthlyBalanceChart>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row v-if="currentBudget">
-      <v-col>
         <Income
           :date="currentBudget.date"
           :incomes="currentBudget.incomes"
@@ -116,6 +90,44 @@
         ></Expense>
       </v-col>
     </v-row>
+    <v-row v-if="currentBudget">
+      <v-col>
+        <v-card class="ma-3 pa-6">
+          <v-card-title color="primary">
+            Budget for {{ monthlyBudgetTitle }}
+          </v-card-title>
+          <v-card-text>
+            <BudgetPercentageChart
+              :monthlyBugdet="currentBudget"
+            ></BudgetPercentageChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card class="ma-3 pa-6">
+          <v-card-title color="primary">
+            Monthly balance throughout the year
+          </v-card-title>
+          <v-card-text>
+            <MonthlyBalanceChart
+              :yearlyBudget="yearlyBudget"
+            ></MonthlyBalanceChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-if="currentBudget">
+      <v-col>
+        <v-card class="ma-3 pa-6">
+          <v-card-title color="primary">Monthly wealth growth</v-card-title>
+          <v-card-text>
+            <MonthlyWealthGrowthChart
+              :yearlyBudget="yearlyBudget"
+            ></MonthlyWealthGrowthChart>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -125,6 +137,7 @@ import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
 import MonthlyBalanceChart from './MonthlyBalanceChart.vue'
+import MonthlyWealthGrowthChart from './MonthlyWealthGrowthChart.vue'
 import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
 
 export default {
@@ -134,7 +147,8 @@ export default {
     Income,
     Expense,
     BudgetPercentageChart,
-    MonthlyBalanceChart
+    MonthlyBalanceChart,
+    MonthlyWealthGrowthChart
   },
 
   data: () => ({

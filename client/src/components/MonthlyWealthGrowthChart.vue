@@ -1,13 +1,16 @@
 <template>
-  <BarChart :chart-data="generateChartData" :options="chartOptions"></BarChart>
+  <LineChart
+    :chart-data="generateChartData"
+    :options="chartOptions"
+  ></LineChart>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import BarChart from './BarChart.vue'
+import LineChart from './LineChart.vue'
 
 export default {
-  name: 'MonthlyBalanceChart',
+  name: 'MonthlyWealthGrowthChart',
 
   props: {
     yearlyBudget: {
@@ -17,7 +20,7 @@ export default {
   },
 
   components: {
-    BarChart
+    LineChart
   },
 
   data: () => ({
@@ -55,34 +58,18 @@ export default {
   computed: {
     ...mapState('budget', ['months']),
     generateChartData() {
-      let labels = this.months
-      let backgroundColor = []
-      let data = []
-      let monthBudget = null
-      let monthBalance = 0
-
-      labels.forEach(label => {
-        monthBudget = this.yearlyBudget.find(
-          budget => new Date(budget.date).getMonth() == labels.indexOf(label)
-        )
-        if (monthBudget) {
-          monthBalance = this.calculateMonthBalance(monthBudget)
-          if (monthBalance > 0) {
-            backgroundColor.push(this.chartBackGroundColors.blue)
-          } else {
-            backgroundColor.push(this.chartBackGroundColors.red)
-          }
-          data.push(monthBalance)
-        }
-      })
+      const labels = this.months
+      const data = this.calculateMonthlyWealthGrowth(labels)
 
       return {
         labels: labels,
         datasets: [
           {
             label: new Date(this.yearlyBudget[0].date).getFullYear(),
-            backgroundColor,
-            data
+            backgroundColor: '#0C71E0',
+            borderColor: '#0C71E0',
+            data,
+            fill: false
           }
         ]
       }
@@ -90,6 +77,26 @@ export default {
   },
 
   methods: {
+    calculateMonthlyWealthGrowth(labels) {
+      let monthBudget = null
+      let monthBalance = null
+      let data = []
+      labels.forEach(label => {
+        let month = labels.indexOf(label)
+        monthBudget = this.yearlyBudget.find(
+          budget => new Date(budget.date).getMonth() == month
+        )
+        if (monthBudget) {
+          monthBalance = this.calculateMonthBalance(monthBudget)
+          if (data.length === 0) {
+            data[month] = monthBalance
+          } else {
+            data[month] = data[month - 1] + monthBalance
+          }
+        }
+      })
+      return data
+    },
     calculateMonthBalance(monthBudget) {
       let sumIncome = monthBudget.incomes
         .map(income => income.amount)

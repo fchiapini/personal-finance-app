@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import DoughnutChart from './DoughnutChart.js'
+import DoughnutChart from './DoughnutChart.vue'
 
 export default {
   name: 'BudgetPercentageChart',
