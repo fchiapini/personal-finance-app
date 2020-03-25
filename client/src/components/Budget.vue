@@ -1,5 +1,10 @@
 <template>
   <v-container fluid>
+    <v-progress-linear
+      v-if="loader"
+      indeterminate
+      color="primary"
+    ></v-progress-linear>
     <v-row>
       <v-col>
         <v-dialog
@@ -161,7 +166,9 @@ export default {
   }),
 
   created() {
-    this.$store.dispatch('budget/bindBudgets')
+    this.$store.dispatch('budget/bindBudgets').then(() => {
+      this.$store.dispatch('stopLoading')
+    })
     this.$store.dispatch('user/loadUserConfiguration').then(() => {
       this.selectedCurrency = this.user.configuration.options.currency
     })
@@ -196,6 +203,7 @@ export default {
   computed: {
     ...mapState('budget', ['budgets', 'months', 'currencies']),
     ...mapState('user', ['user']),
+    ...mapState(['loader']),
     currentBudget() {
       if (this.selectedBudgetDate) {
         return this.budgets.find(

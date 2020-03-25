@@ -26,6 +26,7 @@ const routes = [
       requiresAuth: true
     },
     beforeEnter(routeTo, routeFrom, next) {
+      store.dispatch('startLoading')
       store.dispatch('user/setUserProfile').then(() => {
         next()
       })

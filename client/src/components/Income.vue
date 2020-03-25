@@ -2,6 +2,7 @@
   <v-data-table
     :headers="headers"
     :items="incomes"
+    :items-per-page="5"
     sort-by="category"
     class="elevation-1"
   >
