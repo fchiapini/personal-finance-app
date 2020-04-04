@@ -1,5 +1,6 @@
 module.exports = {
   singleQuote: true,
-  semi: false
+  semi: false,
+  trailingComma: 'none'
   // htmlWhitespaceSensitivity: 'ignore'
 }

@@ -1,14 +1,12 @@
 <template>
   <div class="container-login">
-    <img src="../assets/logo_login.png" class="logo" />
-    <h1>Login</h1>
-    <hr />
+    <p class="login__title">Login</p>
+    <img src="../assets/logo_login2.png" class="login__logo" />
     <div id="firebaseui-auth-container"></div>
-    <span>
-      <router-link class="link-to-signup" to="/sign-up">
-        Do not have an account?
-      </router-link>
-    </span>
+    <router-link class="login__signup-link" to="/sign-up">
+      Do not have an account?
+    </router-link>
+    <img src="../assets/login2.png" class="login__image" />
   </div>
 </template>
 
@@ -43,36 +41,65 @@ export default {
 </script>
 
 <style scoped lang="sass">
+img
+  display: block
+  max-width: 100%
+
 .container-login
-  display: flex
-  flex-direction: column
-  width: 400px
-  height: 420px
-  top: 5%
-  left: 50%
-  background: #1976d2
-  position: absolute
-  transform: translate(-50%, 50%)
-  align-items: center
-  box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.25)
+  margin: 0 auto
+  background: white
+  border: 1px solid #c7c7c7
+  max-width: 800px
+  padding: 2em
+  text-align: center
 
-.logo
-  width: 150px
+.login__title
+  color: #4C4C4C
+  font-weight: 400
+  font-size: 24px
+
+.login__title::after
+  content: ''
+  display: block
+  width: 8em
+  height: 1px
+  margin: 0.5em auto 1em
+  background: #4C4C4C
+  opacity: 0.8
+
+.login__image,
+.login__logo
+  margin: 0 auto
+
+.login__logo
   height: 150px
-  border-radius: 50%
-  margin-top: 30px
-  margin-bottom: 10px
-  box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.25)
+  width: 150px
 
-.link-to-signup
-  color: white
+@media (min-width: 800px)
+  .container-login
+    margin-top: 10%
+    display: grid
+    grid-template-columns: 400px 1fr
+    grid-template-areas: 'img title' 'img logo' 'img firebase-btns' 'signup-link firebase-btns'
 
-h1
-  margin: 0
-  color: white
+    .login__image
+      grid-area: img
+      justify-self: center
 
-hr
-  border: 0.10em solid white
-  border-radius: 5px
-  width: 20em
+    .login__title
+      grid-area: title
+
+    .login__logo
+      grid-area: logo
+      grid-row: 2
+      // justify-self: center
+      // align-self: end
+
+    .firebaseui-auth-container
+      grid-area: firebase-btns
+
+    .login__signup-link
+      grid-area: signup-link
+      justify-self: center
+      align-self: end
 </style>
