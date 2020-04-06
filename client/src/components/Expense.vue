@@ -7,7 +7,7 @@
     class="elevation-1"
   >
     <template v-slot:top>
-      <v-toolbar flat color="primary" dark>
+      <v-toolbar flat color="red" dark>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn text class="mb-2" v-on="on">
@@ -122,13 +122,9 @@ export default {
       return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense'
     },
 
-    categoriesList() {
-      return this.expenseCategories.concat().sort()
-    },
-
     totalExpensesOfMonth() {
       return this.expenses
-        .map(expense => expense.amount)
+        .map((expense) => expense.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
     }
   },

@@ -56,7 +56,7 @@ export default {
   computed: {
     generateChartData() {
       const categories = this.monthlyBugdet.expenses.map(
-        expense => expense.category
+        (expense) => expense.category
       )
 
       // remove duplicated categories
@@ -65,10 +65,10 @@ export default {
       let backgroundColor = []
       let data = []
       let sumIncomeTotal = this.monthlyBugdet.incomes
-        .map(income => income.amount)
+        .map((income) => income.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 
-      labels.forEach(label => {
+      labels.forEach((label) => {
         backgroundColor.push(this.chartBackGroundColors[labels.indexOf(label)])
         data.push(
           this.calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, label)
@@ -99,8 +99,8 @@ export default {
   methods: {
     calculateBudgetPercentageByCategoryExpense(sumIncomeTotal, category) {
       let sumExpenseByCategory = this.monthlyBugdet.expenses
-        .filter(expense => expense.category === category)
-        .map(expense => expense.amount)
+        .filter((expense) => expense.category === category)
+        .map((expense) => expense.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue)
 
       return Number((sumExpenseByCategory / (sumIncomeTotal * 0.01)).toFixed(2))

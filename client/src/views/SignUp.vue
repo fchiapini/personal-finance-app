@@ -84,7 +84,7 @@ export default {
           () => {
             this.$router.replace('home')
           },
-          err => {
+          (err) => {
             alert('Oops. ' + err.message)
           }
         )

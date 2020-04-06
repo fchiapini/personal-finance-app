@@ -22,7 +22,7 @@ export default {
 
   actions: {
     setUserProfile({ commit }) {
-      firebaseApp.auth().onAuthStateChanged(user => {
+      firebaseApp.auth().onAuthStateChanged((user) => {
         if (user) {
           commit('SET_USER', {
             id: user.uid,
@@ -39,7 +39,7 @@ export default {
         .doc(state.user.id)
         .collection('configuration')
         .get()
-        .then(querySnapshot => {
+        .then((querySnapshot) => {
           if (querySnapshot.docs.length > 0) {
             return querySnapshot.docs.map(function(doc) {
               commit('SET_CONFIGURATION', {
@@ -53,7 +53,7 @@ export default {
               .doc(state.user.id)
               .collection('configuration')
               .add({ currency: 'dollar' })
-              .then(doc => {
+              .then((doc) => {
                 return commit('SET_CONFIGURATION', {
                   id: doc.id,
                   options: { currency: 'dollar' }

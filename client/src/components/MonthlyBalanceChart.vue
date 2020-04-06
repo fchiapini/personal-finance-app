@@ -61,9 +61,9 @@ export default {
       let monthBudget = null
       let monthBalance = 0
 
-      labels.forEach(label => {
+      labels.forEach((label) => {
         monthBudget = this.yearlyBudget.find(
-          budget => new Date(budget.date).getMonth() == labels.indexOf(label)
+          (budget) => new Date(budget.date).getMonth() == labels.indexOf(label)
         )
         if (monthBudget) {
           monthBalance = this.calculateMonthBalance(monthBudget)
@@ -92,11 +92,11 @@ export default {
   methods: {
     calculateMonthBalance(monthBudget) {
       let sumIncome = monthBudget.incomes
-        .map(income => income.amount)
+        .map((income) => income.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 
       let sumExpense = monthBudget.expenses
-        .map(expense => expense.amount)
+        .map((expense) => expense.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 
       return Number((sumIncome - sumExpense).toFixed(2))

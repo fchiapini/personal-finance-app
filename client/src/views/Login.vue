@@ -1,7 +1,6 @@
 <template>
   <div class="container-login">
     <img src="../assets/logo_login2.png" class="login__logo" />
-    <p class="login__title">Sign In</p>
     <div id="firebaseui-auth-container"></div>
     <router-link class="login__signup-link" to="/sign-up">
       Do not have an account?
@@ -53,20 +52,6 @@ img
   padding: 2em
   text-align: center
 
-.login__title
-  color: #4C4C4C
-  font-weight: 400
-  font-size: 24px
-
-.login__title::after
-  content: ''
-  display: block
-  width: 3em
-  height: 1px
-  margin: 0.5em auto 0
-  background: #4C4C4C
-  opacity: 0.8
-
 .login__image,
 .login__logo
   margin: 0 auto
@@ -81,14 +66,11 @@ img
     margin-top: 10%
     display: grid
     grid-template-columns: 400px 1fr
-    grid-template-areas: 'img logo' 'img title' 'img firebase-btns' 'signup-link firebase-btns'
+    grid-template-areas: 'img logo' 'img firebase-btns' 'signup-link firebase-btns'
 
     .login__image
       grid-area: img
       justify-self: center
-
-    .login__title
-      grid-area: title
 
     .login__logo
       grid-area: logo

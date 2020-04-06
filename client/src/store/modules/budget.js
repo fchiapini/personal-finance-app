@@ -119,19 +119,19 @@ export default {
     },
     addItem({ state, rootState }, params) {
       const { date, newItem, budgetAttr } = params
-      let updateBudget = state.budgets.find(budget => budget.date === date)
+      let updateBudget = state.budgets.find((budget) => budget.date === date)
       updateBudget[budgetAttr].push(newItem)
       updateDb(updateBudget, rootState.user.user.id)
     },
     updateItem({ state, rootState }, params) {
       const { date, index, editedItem, budgetAttr } = params
-      let updateBudget = state.budgets.find(budget => budget.date === date)
+      let updateBudget = state.budgets.find((budget) => budget.date === date)
       Object.assign(updateBudget[budgetAttr][index], editedItem)
       updateDb(updateBudget, rootState.user.user.id)
     },
     deleteItem({ state, rootState }, params) {
       const { date, index, budgetAttr } = params
-      let updateBudget = state.budgets.find(budget => budget.date === date)
+      let updateBudget = state.budgets.find((budget) => budget.date === date)
       updateBudget[budgetAttr].splice(index, 1)
       updateDb(updateBudget, rootState.user.user.id)
     }
