@@ -2,6 +2,11 @@
   <v-app>
     <Navbar />
     <v-content>
+      <v-progress-linear
+        v-if="loader"
+        indeterminate
+        color="primary"
+      ></v-progress-linear>
       <router-view></router-view>
     </v-content>
     <v-footer padless class="footer-copyright">
@@ -27,7 +32,8 @@ export default {
   data: () => ({}),
 
   computed: {
-    ...mapState('user', ['user'])
+    ...mapState('user', ['user']),
+    ...mapState(['loader'])
   }
 }
 </script>

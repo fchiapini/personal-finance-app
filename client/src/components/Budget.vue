@@ -1,10 +1,5 @@
 <template>
   <v-container fluid>
-    <v-progress-linear
-      v-if="loader"
-      indeterminate
-      color="primary"
-    ></v-progress-linear>
     <v-row justify="center">
       <v-col cols="12" md="4">
         <v-expansion-panels v-model="panel" flat tile>
@@ -16,10 +11,10 @@
               <v-sheet class="mx-auto" color="white" max-width="700">
                 <v-slide-group
                   v-model="selectedItemIndex"
-                  class="pt-2"
+                  class="pt-4"
                   mandatory
                   show-arrows
-                  center-active="true"
+                  :center-active="true"
                 >
                   <v-slide-item
                     v-for="date in dateList"
@@ -228,7 +223,6 @@ export default {
   computed: {
     ...mapState('budget', ['budgets', 'months', 'currencies']),
     ...mapState('user', ['user']),
-    ...mapState(['loader']),
     currentBudget() {
       if (this.selectedBudgetDate) {
         return this.budgets.find(
