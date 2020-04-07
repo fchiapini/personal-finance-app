@@ -65,7 +65,12 @@ export default {
         labels: labels,
         datasets: [
           {
-            label: new Date(this.yearlyBudget[0].date).getFullYear(),
+            label: new Date(
+              this.yearlyBudget[0].date
+                .split('/')
+                .reverse()
+                .join('-')
+            ).getFullYear(),
             backgroundColor: '#0C71E0',
             borderColor: '#0C71E0',
             data,
@@ -84,7 +89,13 @@ export default {
       labels.forEach((label) => {
         let month = labels.indexOf(label)
         monthBudget = this.yearlyBudget.find(
-          (budget) => new Date(budget.date).getMonth() == month
+          (budget) =>
+            new Date(
+              budget.date
+                .split('/')
+                .reverse()
+                .join('-')
+            ).getMonth() == month
         )
         if (monthBudget) {
           monthBalance = this.calculateMonthBalance(monthBudget)

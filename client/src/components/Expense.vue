@@ -7,12 +7,12 @@
     class="elevation-1"
   >
     <template v-slot:top>
-      <v-toolbar flat color="red" dark>
+      <v-toolbar flat color="red lighten-1" dark>
         <v-dialog v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn text class="mb-2" v-on="on">
               <v-icon>mdi-plus</v-icon>
-              Expense
+              Add Expense
             </v-btn>
           </template>
           <v-card color="primary" dark>
@@ -56,9 +56,6 @@
           </v-card>
         </v-dialog>
         <v-spacer />
-        <v-toolbar-title>
-          Expense: {{ totalExpensesOfMonth | currency }}
-        </v-toolbar-title>
       </v-toolbar>
     </template>
     <template v-slot:item.amount="{ item }">
@@ -67,6 +64,12 @@
     <template v-slot:item.action="{ item }">
       <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
       <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+    </template>
+    <template slot="body.append">
+      <tr>
+        <th class="body-1 font-weight-bold">Total:</th>
+        <td class="font-weight-bold">{{ totalExpensesOfMonth | currency }}</td>
+      </tr>
     </template>
   </v-data-table>
 </template>

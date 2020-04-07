@@ -64,6 +64,7 @@ export default {
 
       let backgroundColor = []
       let data = []
+      let totalExpensePercentageOverIncome = 0
       let sumIncomeTotal = this.monthlyBugdet.incomes
         .map((income) => income.amount)
         .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
@@ -76,12 +77,15 @@ export default {
       })
 
       labels.push(`Month's saving`)
+      totalExpensePercentageOverIncome = data.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
+        0
+      )
       data.push(
         100 -
-          data.reduce(
-            (accumulator, currentValue) => accumulator + currentValue,
-            0
-          )
+          (totalExpensePercentageOverIncome >= 100
+            ? 100
+            : totalExpensePercentageOverIncome)
       )
 
       return {

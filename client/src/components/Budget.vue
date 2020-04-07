@@ -6,8 +6,8 @@
       color="primary"
     ></v-progress-linear>
     <v-row justify="center">
-      <v-col cols="12" md="3" v-if="currentBudget">
-        <v-expansion-panels flat tile>
+      <v-col cols="12" md="4" v-if="currentBudget">
+        <v-expansion-panels v-model="panel" flat tile>
           <v-expansion-panel>
             <v-expansion-panel-header color="primary" class="white--text">
               {{ monthlyBudgetTitle }}
@@ -17,19 +17,19 @@
                 <v-slide-group mandatory show-arrows>
                   <v-slide-item
                     v-for="date in dateList"
-                    :key="date"
-                    v-slot:default="{ active, toggle }"
+                    :key="date.id"
+                    v-slot:default="{ active }"
                   >
                     <v-btn
                       class="mx-2"
-                      color="primary"
+                      :color="active ? 'primary' : 'green lighten-1'"
                       :input-value="active"
                       depressed
                       text
-                      @click="toggle"
+                      @click="onSelectDate(date.id)"
                     >
                       {{
-                        date.toLocaleString('default', {
+                        date.date.toLocaleString('en-US', {
                           month: 'short',
                           year: 'numeric'
                         })
@@ -41,94 +41,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
-        <v-dialog
-          v-model="dialog"
-          persistent
-          max-width="1000px"
-          @submit.prevent="onSubmit"
-        >
-          <!-- <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark v-on="on">
-              {{ monthlyBudgetTitle }}
-              <v-icon>mdi-chevron-down</v-icon>
-            </v-btn>
-          </template> -->
-          <v-card>
-            <v-card-text>
-              <v-container>
-                <v-row justify="center">
-                  <v-col cols="12">
-                    <v-sheet class="mx-auto" max-width="700">
-                      <v-slide-group
-                        v-model="selectedBudgetDate"
-                        mandatory
-                        show-arrows
-                      >
-                        <v-slide-item
-                          v-for="date in dateList"
-                          :key="date"
-                          v-slot:default="{ active, toggle }"
-                        >
-                          <v-btn
-                            class="mx-2"
-                            :input-value="active"
-                            active-class="primary white--text"
-                            depressed
-                            rounded
-                            @click="toggle"
-                          >
-                            {{
-                              date.toLocaleString('default', {
-                                month: 'short',
-                                year: 'numeric'
-                              })
-                            }}
-                          </v-btn>
-                        </v-slide-item>
-                      </v-slide-group>
-                    </v-sheet>
-                    <!-- <v-text-field
-                      name="date"
-                      label="Select a date"
-                      v-model="budgetDate"
-                      :rules="[dateAlreadyCreated]"
-                      readonly
-                    ></v-text-field>
-                    <v-date-picker
-                      v-model="budgetDate"
-                      type="month"
-                    ></v-date-picker> -->
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-            <!-- <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="resetValues">
-                Close
-              </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                :disabled="!datePicked"
-                @click="onSubmit"
-              >
-                Save
-              </v-btn>
-            </v-card-actions> -->
-          </v-card>
-        </v-dialog>
       </v-col>
-      <!-- <v-col v-if="currentBudget">
-        <v-select
-          v-model="selectedBudgetDate"
-          :items="budgetDateList"
-          item-text="text"
-          item-value="value"
-          label="Month's budget"
-          outlined
-        ></v-select>
-      </v-col> -->
       <v-col cols="12" md="2">
         <v-select
           v-model="selectedCurrency"
@@ -159,7 +72,7 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" md="4">
+      <v-col align-self="center" cols="12" md="4">
         <BudgetPercentageChart
           :monthlyBugdet="currentBudget"
         ></BudgetPercentageChart>
@@ -169,7 +82,7 @@
       <v-col cols="12" md="6">
         <v-card outlined>
           <v-card-title color="primary">
-            Monthly balance throughout the year
+            Monthly balance
           </v-card-title>
           <v-card-text>
             <MonthlyBalanceChart
@@ -214,7 +127,7 @@ export default {
   },
 
   data: () => ({
-    dialog: false,
+    panel: null,
     budgetDate: null,
     selectedBudgetDate: null,
     dateList: [],
@@ -237,11 +150,19 @@ export default {
     initDateList() {
       let now = new Date()
       let dateList = []
-      const backForwardMaxDifferenceInMonthsFromCurrentDate = 6
+      const backForwardMaxDifferenceInMonthsFromCurrentDate = 12
       let previousMonth = null
       let nextMonth = null
+      let previousMonthObj = null
+      let nextMonthObj = null
 
-      dateList.push(now)
+      dateList.push({
+        id: now.toLocaleString('en-US', {
+          month: 'numeric',
+          year: 'numeric'
+        }),
+        date: now
+      })
       for (
         let i = backForwardMaxDifferenceInMonthsFromCurrentDate;
         i > 0;
@@ -249,9 +170,30 @@ export default {
       ) {
         previousMonth = new Date(now.getFullYear(), now.getMonth() - i)
         nextMonth = new Date(now.getFullYear(), now.getMonth() + i)
-        dateList.push(previousMonth, nextMonth)
+
+        previousMonthObj = {
+          id: previousMonth.toLocaleString('en-US', {
+            month: 'numeric',
+            year: 'numeric'
+          }),
+          date: previousMonth
+        }
+
+        nextMonthObj = {
+          id: nextMonth.toLocaleString('en-US', {
+            month: 'numeric',
+            year: 'numeric'
+          }),
+          date: nextMonth
+        }
+
+        dateList.push(previousMonthObj, nextMonthObj)
       }
-      return dateList.sort((a, b) => a - b)
+      return dateList.sort((a, b) => a.date - b.date)
+    },
+    onSelectDate(selectedDate) {
+      this.selectedBudgetDate = selectedDate
+      this.panel = null
     },
     onSubmit() {
       this.$store.dispatch('budget/createBudget', this.budgetDate).then(() => {
@@ -261,23 +203,15 @@ export default {
       })
     },
     formatMonthYearDate(date) {
-      return `${this.months[Number(date.substring(5, 7))]} ${date.substring(
-        0,
-        4
-      )}`
+      let [month, year] = date.split('/')
+      return `${this.months[Number(month - 1)]} ${year}`
     },
     resetValues() {
       this.dialog = false
       this.budgetDate = null
     },
-    availableDate() {
-      return (
-        this.budgets.map((budget) => budget.date).indexOf(this.budgetDate) ===
-        -1
-      )
-    },
     getYear(strDate) {
-      return strDate.substring(0, 4)
+      return strDate.split('/')[1]
     }
   },
 
@@ -290,7 +224,7 @@ export default {
         return this.budgets.find(
           (budget) =>
             budget.date ===
-            this.selectedBudgetDate.toLocaleString('default', {
+            this.selectedBudgetDate.toLocaleString('en-US', {
               month: 'numeric',
               year: 'numeric'
             })
@@ -305,24 +239,6 @@ export default {
     },
     monthlyBudgetTitle() {
       return this.formatMonthYearDate(this.currentBudget.date)
-    },
-    budgetDateList() {
-      return this.budgets
-        .map((budget) => {
-          return {
-            text: this.formatMonthYearDate(budget.date),
-            value: budget.date
-          }
-        })
-        .sort((a, b) => (a.value > b.value ? 1 : -1))
-    },
-    datePicked() {
-      return this.budgetDate !== null && this.availableDate()
-    },
-    dateAlreadyCreated() {
-      return !this.availableDate()
-        ? 'Budget for the selected date already created!'
-        : ''
     },
     yearlyBudget() {
       return this.budgets.filter(

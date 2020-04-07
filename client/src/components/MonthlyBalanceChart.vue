@@ -63,7 +63,13 @@ export default {
 
       labels.forEach((label) => {
         monthBudget = this.yearlyBudget.find(
-          (budget) => new Date(budget.date).getMonth() == labels.indexOf(label)
+          (budget) =>
+            new Date(
+              budget.date
+                .split('/')
+                .reverse()
+                .join('-')
+            ).getMonth() == labels.indexOf(label)
         )
         if (monthBudget) {
           monthBalance = this.calculateMonthBalance(monthBudget)
@@ -80,7 +86,12 @@ export default {
         labels: labels,
         datasets: [
           {
-            label: new Date(this.yearlyBudget[0].date).getFullYear(),
+            label: new Date(
+              this.yearlyBudget[0].date
+                .split('/')
+                .reverse()
+                .join('-')
+            ).getFullYear(),
             backgroundColor,
             data
           }
