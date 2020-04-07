@@ -19,6 +19,7 @@
                   class="pt-2"
                   mandatory
                   show-arrows
+                  center-active="true"
                 >
                   <v-slide-item
                     v-for="date in dateList"
