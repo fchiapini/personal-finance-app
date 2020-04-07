@@ -1,11 +1,11 @@
 <template>
   <div class="container-login">
-    <img src="../assets/logo_login2.png" class="login__logo" />
+    <img src="../assets/logo_login.png" class="login__logo" />
     <div id="firebaseui-auth-container"></div>
     <router-link class="login__signup-link" to="/sign-up">
       Do not have an account?
     </router-link>
-    <img src="../assets/login2.png" class="login__image" />
+    <img src="../assets/login.jpg" class="login__image" />
   </div>
 </template>
 
@@ -60,7 +60,7 @@ img
   height: 150px
   width: 150px
 
-@media (min-width: 800px)
+@media (min-width: 850px)
   .container-login
     margin: 0 auto
     margin-top: 10%

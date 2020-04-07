@@ -6,7 +6,7 @@
       color="primary"
     ></v-progress-linear>
     <v-row justify="center">
-      <v-col cols="12" md="4" v-if="currentBudget">
+      <v-col cols="12" md="4">
         <v-expansion-panels v-model="panel" flat tile>
           <v-expansion-panel>
             <v-expansion-panel-header color="primary" class="white--text">
@@ -20,21 +20,22 @@
                     :key="date.id"
                     v-slot:default="{ active }"
                   >
-                    <v-btn
+                    <v-card
                       class="mx-2"
-                      :color="active ? 'primary' : 'green lighten-1'"
+                      :color="active ? 'green' : 'grey lighten-1'"
                       :input-value="active"
-                      depressed
-                      text
                       @click="onSelectDate(date.id)"
+                      outlined
                     >
-                      {{
-                        date.date.toLocaleString('en-US', {
-                          month: 'short',
-                          year: 'numeric'
-                        })
-                      }}
-                    </v-btn>
+                      <v-card-text class="white--text">
+                        {{
+                          date.date.toLocaleString('en-US', {
+                            month: 'short',
+                            year: 'numeric'
+                          })
+                        }}
+                      </v-card-text>
+                    </v-card>
                   </v-slide-item>
                 </v-slide-group>
               </v-sheet>
@@ -238,6 +239,14 @@ export default {
       return this.budgets.find((budget) => budget.date === latestDate)
     },
     monthlyBudgetTitle() {
+      if (this.currentBudget) {
+        return this.formatMonthYearDate(this.currentBudget.date)
+      } else {
+        return new Date().toLocaleString('default', {
+          month: 'long',
+          year: 'numeric'
+        })
+      }
       return this.formatMonthYearDate(this.currentBudget.date)
     },
     yearlyBudget() {
