@@ -14,7 +14,12 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content>
               <v-sheet class="mx-auto" color="white" max-width="700">
-                <v-slide-group mandatory show-arrows>
+                <v-slide-group
+                  v-model="selectedItemIndex"
+                  class="pt-2"
+                  mandatory
+                  show-arrows
+                >
                   <v-slide-item
                     v-for="date in dateList"
                     :key="date.id"
@@ -82,9 +87,7 @@
     <v-row v-if="currentBudget">
       <v-col cols="12" md="6">
         <v-card outlined>
-          <v-card-title color="primary">
-            Monthly balance
-          </v-card-title>
+          <v-card-title color="primary">Monthly balance</v-card-title>
           <v-card-text>
             <MonthlyBalanceChart
               :yearlyBudget="yearlyBudget"
@@ -103,7 +106,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="currentBudget"></v-row>
   </v-container>
 </template>
 
@@ -131,6 +133,7 @@ export default {
     panel: null,
     budgetDate: null,
     selectedBudgetDate: null,
+    selectedItemIndex: null,
     dateList: [],
     selectedCurrency: null,
     forceReRenderIncomeDataTableKey: 0,
@@ -138,13 +141,16 @@ export default {
   }),
 
   created() {
+    this.dateList = this.initDateList()
     this.$store.dispatch('budget/bindBudgets').then(() => {
+      this.selectedItemIndex = this.dateList.findIndex(
+        (x) => x.id === this.currentBudget.date
+      )
       this.$store.dispatch('stopLoading')
     })
     this.$store.dispatch('user/loadUserConfiguration').then(() => {
       this.selectedCurrency = this.user.configuration.options.currency
     })
-    this.dateList = this.initDateList()
   },
 
   methods: {
@@ -195,11 +201,13 @@ export default {
     onSelectDate(selectedDate) {
       this.selectedBudgetDate = selectedDate
       this.panel = null
+      this.selectedItemIndex = this.dateList.findIndex(
+        (x) => x.id === selectedDate
+      )
     },
     onSubmit() {
       this.$store.dispatch('budget/createBudget', this.budgetDate).then(() => {
         this.selectedBudgetDate = this.budgetDate
-        this.dialog = !this.dialog
         this.budgetDate = null
       })
     },
