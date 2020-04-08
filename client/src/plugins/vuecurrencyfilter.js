@@ -1,9 +1,9 @@
 const CURRENCY_OPTIONS = {
   dollar: {
-    symbol: '$',
-    thousandsSeparator: '.',
+    symbol: 'US$',
+    thousandsSeparator: ',',
     fractionCount: 2,
-    fractionSeparator: ',',
+    fractionSeparator: '.',
     symbolPosition: 'front',
     symbolSpacing: true
   },

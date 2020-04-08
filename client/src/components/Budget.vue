@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row justify="center">
+    <v-row justify="start">
       <v-col cols="12" md="4">
         <v-expansion-panels v-model="panel" flat tile>
           <v-expansion-panel>
@@ -52,6 +52,14 @@
           outlined
         ></v-select>
       </v-col>
+      <v-spacer />
+      <v-col v-if="currentBudget" cols="12" md="4">
+        <v-card outlined dark :color="balanceTextTypeClass">
+          <v-card-text class="white--text text-center">
+            {{ Math.abs(balance) | currency }} {{ balanceText }}
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
     <template v-if="currentBudget">
       <v-row>
@@ -81,7 +89,7 @@
           ></BudgetPercentageChart>
         </v-col>
       </v-row>
-      <v-row v-if="currentBudget">
+      <v-row>
         <v-col cols="12" md="6">
           <v-card outlined>
             <v-card-title color="primary">Monthly balance</v-card-title>
@@ -265,6 +273,27 @@ export default {
         (budget) =>
           this.getYear(budget.date) === this.getYear(this.currentBudget.date)
       )
+    },
+    balance() {
+      if (this.currentBudget) {
+        const sumIncome = this.currentBudget.incomes
+          .map((income) => income.amount)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+
+        const sumExpense = this.currentBudget.expenses
+          .map((expense) => expense.amount)
+          .reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+
+        return sumIncome - sumExpense
+      } else {
+        return {}
+      }
+    },
+    balanceText() {
+      return this.balance >= 0 ? 'LEFT TO BUDGET' : 'OVER BUDGET'
+    },
+    balanceTextTypeClass() {
+      return this.balance >= 0 ? 'green' : 'red'
     }
   },
 
