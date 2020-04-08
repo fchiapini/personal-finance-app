@@ -53,71 +53,81 @@
         ></v-select>
       </v-col>
     </v-row>
-    <v-row v-if="currentBudget">
-      <v-col cols="12" md="8">
-        <v-row>
-          <v-col>
-            <Income
-              :date="currentBudget.date"
-              :incomes="currentBudget.incomes"
-              :key="forceReRenderIncomeDataTableKey"
-            ></Income>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <Expense
-              :date="currentBudget.date"
-              :expenses="currentBudget.expenses"
-              :key="forceReRenderExpenseDataTableKey"
-            ></Expense>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col align-self="center" cols="12" md="4">
-        <BudgetPercentageChart
-          :monthlyBugdet="currentBudget"
-        ></BudgetPercentageChart>
-      </v-col>
-    </v-row>
-    <v-row v-if="currentBudget">
-      <v-col cols="12" md="6">
-        <v-card outlined>
-          <v-card-title color="primary">Monthly balance</v-card-title>
-          <v-card-text>
-            <MonthlyBalanceChart
-              :yearlyBudget="yearlyBudget"
-            ></MonthlyBalanceChart>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card outlined>
-          <v-card-title color="primary">Monthly wealth growth</v-card-title>
-          <v-card-text>
-            <MonthlyWealthGrowthChart
-              :yearlyBudget="yearlyBudget"
-            ></MonthlyWealthGrowthChart>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <template v-if="currentBudget">
+      <v-row>
+        <v-col cols="12" md="8">
+          <v-row>
+            <v-col>
+              <Income
+                :date="currentBudget.date"
+                :incomes="currentBudget.incomes"
+                :key="forceReRenderIncomeDataTableKey"
+              ></Income>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <Expense
+                :date="currentBudget.date"
+                :expenses="currentBudget.expenses"
+                :key="forceReRenderExpenseDataTableKey"
+              ></Expense>
+            </v-col>
+          </v-row>
+        </v-col>
+        <v-col align-self="center" cols="12" md="4">
+          <BudgetPercentageChart
+            :monthlyBugdet="currentBudget"
+          ></BudgetPercentageChart>
+        </v-col>
+      </v-row>
+      <v-row v-if="currentBudget">
+        <v-col cols="12" md="6">
+          <v-card outlined>
+            <v-card-title color="primary">Monthly balance</v-card-title>
+            <v-card-text>
+              <MonthlyBalanceChart
+                :yearlyBudget="yearlyBudget"
+              ></MonthlyBalanceChart>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-card outlined>
+            <v-card-title color="primary">Monthly wealth growth</v-card-title>
+            <v-card-text>
+              <MonthlyWealthGrowthChart
+                :yearlyBudget="yearlyBudget"
+              ></MonthlyWealthGrowthChart>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
+    <template v-else-if="!currentBudget && !loader">
+      <CreateBudget :budgetDate="selectedBudgetDate"></CreateBudget>
+    </template>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import CreateBudget from '@/components/CreateBudget.vue'
 import Income from './Income.vue'
 import Expense from './Expense.vue'
 import BudgetPercentageChart from './BudgetPercentageChart.vue'
 import MonthlyBalanceChart from './MonthlyBalanceChart.vue'
 import MonthlyWealthGrowthChart from './MonthlyWealthGrowthChart.vue'
 import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
+import { utilsMixin } from '../mixins/utilsMixin.js'
 
 export default {
   name: 'Budget',
 
+  mixins: [utilsMixin],
+
   components: {
+    CreateBudget,
     Income,
     Expense,
     BudgetPercentageChart,
@@ -207,10 +217,6 @@ export default {
         this.budgetDate = null
       })
     },
-    formatMonthYearDate(date) {
-      let [month, year] = date.split('/')
-      return `${this.months[Number(month - 1)]} ${year}`
-    },
     resetValues() {
       this.dialog = false
       this.budgetDate = null
@@ -223,6 +229,7 @@ export default {
   computed: {
     ...mapState('budget', ['budgets', 'months', 'currencies']),
     ...mapState('user', ['user']),
+    ...mapState(['loader']),
     currentBudget() {
       if (this.selectedBudgetDate) {
         return this.budgets.find(
@@ -242,7 +249,9 @@ export default {
       return this.budgets.find((budget) => budget.date === latestDate)
     },
     monthlyBudgetTitle() {
-      if (this.currentBudget) {
+      if (this.selectedBudgetDate) {
+        return this.formatMonthYearDate(this.selectedBudgetDate)
+      } else if (this.currentBudget) {
         return this.formatMonthYearDate(this.currentBudget.date)
       } else {
         return new Date().toLocaleString('default', {
@@ -250,7 +259,6 @@ export default {
           year: 'numeric'
         })
       }
-      return this.formatMonthYearDate(this.currentBudget.date)
     },
     yearlyBudget() {
       return this.budgets.filter(
