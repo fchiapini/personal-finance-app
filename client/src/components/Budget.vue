@@ -53,8 +53,8 @@
         ></v-select>
       </v-col>
       <v-spacer />
-      <v-col v-if="currentBudget" cols="12" md="4">
-        <v-card outlined dark :color="balanceTextTypeClass">
+      <v-col v-if="currentBudget" cols="12" md="6">
+        <v-card outlined :color="balanceTextTypeClass">
           <v-card-text class="white--text text-center">
             {{ Math.abs(balance) | currency }} {{ balanceText }}
           </v-card-text>
