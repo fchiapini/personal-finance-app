@@ -83,7 +83,7 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col align-self="center" cols="12" md="4">
+        <v-col align-self="start" cols="12" md="4">
           <BudgetPercentageChart
             :monthlyBugdet="currentBudget"
           ></BudgetPercentageChart>

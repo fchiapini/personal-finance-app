@@ -1,166 +1,150 @@
 <template>
-  <div>
-    <v-expansion-panels tile multiple>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          Monthly Income
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-row v-for="(income, index) in incomes" :key="index">
-            <v-col cols="12" md="8">
+  <v-expansion-panels :value="[0]" accordion tile multiple hover>
+    <v-expansion-panel>
+      <v-expansion-panel-header>Monthly Income</v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-row>
+          <v-col cols="12">
+            <v-dialog v-model="dialog" width="350">
+              <template v-slot:activator="{ on }">
+                <v-simple-table>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr v-for="(income, index) in incomes" :key="index">
+                        <td v-on="on" @click="editItem(income)">
+                          {{ income.category }}
+                        </td>
+                        <td v-on="on" @click="editItem(income)">
+                          {{ income.amount | currency }}
+                        </td>
+                        <td>
+                          <v-icon small @click="deleteItem(income)">
+                            mdi-close
+                          </v-icon>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-form @submit.prevent="save">
+                    <v-row>
+                      <v-col cols="12">
+                        <v-select
+                          v-model="editedItem.category"
+                          :items="incomeCategories"
+                          :error-messages="selectEditedItemErrors"
+                          label="Income"
+                          outlined
+                          clearable
+                          required
+                          @change="$v.editedItem.category.$touch()"
+                          @blur="$v.editedItem.category.$touch()"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="number"
+                          v-model.number="editedItem.amount"
+                          :error-messages="amountEditedItemErrors"
+                          label="Amount"
+                          outlined
+                          required
+                          @input="$v.editedItem.amount.$touch()"
+                          @blur="$v.editedItem.amount.$touch()"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-btn
+                          type="submit"
+                          :disabled="$v.editedItem.$anyError"
+                          block
+                          color="green"
+                          x-large
+                          class="white--text"
+                        >
+                          <v-icon>mdi-send</v-icon>
+                          Update
+                        </v-btn>
+                        <v-btn
+                          block
+                          outlined
+                          color="primary"
+                          x-large
+                          class="white--text"
+                          @click="close"
+                        >
+                          <v-icon>mdi-close</v-icon>
+                          Cancel
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </v-col>
+        </v-row>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+    <v-expansion-panel>
+      <v-expansion-panel-header>
+        <v-row>
+          <v-col cols="12">
+            <v-icon>mdi-plus</v-icon>
+            Add Income
+          </v-col>
+        </v-row>
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-form @submit.prevent="save">
+          <v-row>
+            <v-col cols="12" md="5">
               <v-select
+                v-model="newIncome.category"
                 :items="incomeCategories"
+                :error-messages="selectErrors"
                 label="Income"
                 outlined
                 clearable
-                :value="income.category"
+                autofocus
+                required
+                @change="$v.newIncome.category.$touch()"
+                @blur="$v.newIncome.category.$touch()"
               ></v-select>
             </v-col>
             <v-col cols="12" md="4">
               <v-text-field
                 type="number"
+                v-model.number="newIncome.amount"
+                :error-messages="amountErrors"
                 label="Amount"
                 outlined
-                :value="income.amount"
-                prefix="$"
+                required
+                @input="$v.newIncome.amount.$touch()"
+                @blur="$v.newIncome.amount.$touch()"
               ></v-text-field>
             </v-col>
-          </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <v-row>
-            <v-col cols="12">
-              <v-icon>mdi-plus</v-icon>
-              Add Income
-            </v-col>
-          </v-row>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-form @submit.prevent="save">
-            <v-card outlined>
-              <v-card-text>
-                <v-row>
-                  <v-col cols="12" md="5">
-                    <v-select
-                      v-model="newIncome.category"
-                      :items="incomeCategories"
-                      :error-messages="selectErrors"
-                      label="Income"
-                      outlined
-                      clearable
-                      autofocus
-                      required
-                      @change="$v.newIncome.category.$touch()"
-                      @blur="$v.newIncome.category.$touch()"
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" md="4">
-                    <v-text-field
-                      type="number"
-                      v-model="newIncome.amount"
-                      :error-messages="amountErrors"
-                      label="Amount"
-                      outlined
-                      required
-                      @input="$v.newIncome.amount.$touch()"
-                      @blur="$v.newIncome.amount.$touch()"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" md="2">
-                    <v-btn
-                      type="submit"
-                      :disabled="$v.$invalid"
-                      block
-                      outlined
-                      x-large
-                      class="green--text"
-                    >
-                      <v-icon>mdi-plus</v-icon>
-                      Add Income
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
-          </v-form>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <v-data-table
-      :headers="headers"
-      :items="incomes"
-      :items-per-page="5"
-      sort-by="category"
-      class="elevation-1"
-    >
-      <template v-slot:top>
-        <v-toolbar flat color="green lighten-1" dark>
-          <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{ on }">
-              <v-btn text class="mb-2" v-on="on">
+            <v-col cols="12" md="2">
+              <v-btn
+                type="submit"
+                :disabled="$v.newIncome.$invalid"
+                block
+                color="green"
+                x-large
+                class="white--text"
+              >
                 <v-icon>mdi-plus</v-icon>
                 Add Income
               </v-btn>
-            </template>
-            <v-card color="primary" dark>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-              <v-divider />
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-select
-                        v-model="editedItem.category"
-                        :items="incomeCategories"
-                        label="Category income"
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        type="number"
-                        v-model.number="editedItem.amount"
-                        label="Amount"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn outlined @click="close">Cancel</v-btn>
-                <v-btn outlined @click="save">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-spacer />
-        </v-toolbar>
-      </template>
-      <template v-slot:item.amount="{ item }">
-        {{ item.amount | currency }}
-      </template>
-      <template v-slot:item.action="{ item }">
-        <v-icon small class="mr-2" @click="editItem(item)">
-          mdi-pencil
-        </v-icon>
-        <v-icon small @click="deleteItem(item)">
-          mdi-delete
-        </v-icon>
-      </template>
-      <template slot="body.append">
-        <tr>
-          <th class="body-1 font-weight-bold">
-            Total:
-          </th>
-          <td class="font-weight-bold">{{ totalIncomesOfMonth | currency }}</td>
-        </tr>
-      </template>
-    </v-data-table>
-  </div>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script>
@@ -195,21 +179,20 @@ export default {
         maxLength: maxLength(15),
         minValue: minValue(1)
       }
+    },
+    editedItem: {
+      category: { required },
+      amount: {
+        required,
+        decimal,
+        maxLength: maxLength(15),
+        minValue: minValue(1)
+      }
     }
   },
 
   data: () => ({
     dialog: false,
-    headers: [
-      {
-        text: 'Category',
-        align: 'start',
-        sortable: true,
-        value: 'category'
-      },
-      { text: 'Amount', value: 'amount', sortable: false },
-      { text: 'Actions', value: 'action', sortable: false }
-    ],
     newIncome: {
       category: '',
       amount: 0
@@ -245,8 +228,23 @@ export default {
       !this.$v.newIncome.amount.maxLength && errors.push('Amount too large!')
       return errors
     },
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Income' : 'Edit Income'
+    selectEditedItemErrors() {
+      const errors = []
+      if (!this.$v.editedItem.category.$dirty) return errors
+      !this.$v.editedItem.category.required &&
+        errors.push('Category income required!')
+      return errors
+    },
+    amountEditedItemErrors() {
+      const errors = []
+      if (!this.$v.editedItem.amount.$dirty) return errors
+      !this.$v.editedItem.amount.decimal &&
+        errors.push('Amount must be a valid number')
+      !this.$v.editedItem.amount.required && errors.push('Amount required!')
+      !this.$v.editedItem.amount.minValue &&
+        errors.push('Amount must be higher than zero!')
+      !this.$v.editedItem.amount.maxLength && errors.push('Amount too large!')
+      return errors
     },
 
     totalIncomesOfMonth() {
@@ -271,13 +269,11 @@ export default {
 
     deleteItem(item) {
       const index = this.incomes.indexOf(item)
-      if (confirm('Are you sure you want to delete this item?')) {
-        this.$store.dispatch('budget/deleteItem', {
-          date: this.date,
-          index: index,
-          budgetAttr: 'incomes'
-        })
-      }
+      this.$store.dispatch('budget/deleteItem', {
+        date: this.date,
+        index: index,
+        budgetAttr: 'incomes'
+      })
     },
 
     close() {
@@ -290,21 +286,29 @@ export default {
 
     save() {
       this.$v.$touch()
-      if (this.editedIndex > -1 && !this.$v.$invalid) {
+      if (this.editedIndex > -1 && !this.$v.editedItem.$invalid) {
         this.$store.dispatch('budget/updateItem', {
           date: this.date,
           index: this.editedIndex,
           editedItem: this.editedItem,
           budgetAttr: 'incomes'
         })
-      } else if (!this.$v.$invalid) {
-        this.$store.dispatch('budget/addItem', {
-          date: this.date,
-          newItem: this.newIncome,
-          budgetAttr: 'incomes'
-        })
+      } else if (!this.$v.newIncome.$invalid) {
+        this.$store
+          .dispatch('budget/addItem', {
+            date: this.date,
+            newItem: this.newIncome,
+            budgetAttr: 'incomes'
+          })
+          .then(() => (this.newIncome = this.createFreshObject()))
       }
       this.close()
+    },
+    createFreshObject() {
+      return {
+        category: '',
+        amount: 0
+      }
     }
   }
 }

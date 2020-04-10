@@ -1,81 +1,172 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="expenses"
-    :items-per-page="5"
-    sort-by="category"
-    class="elevation-1"
-  >
-    <template v-slot:top>
-      <v-toolbar flat color="red lighten-1" dark>
-        <v-dialog v-model="dialog" max-width="600px">
-          <template v-slot:activator="{ on }">
-            <v-btn text class="mb-2" v-on="on">
-              <v-icon>mdi-plus</v-icon>
-              Add Expense
-            </v-btn>
-          </template>
-          <v-card color="primary" dark>
-            <v-card-title>
-              <span class="headline">{{ formTitle }}</span>
-            </v-card-title>
-            <v-divider />
-            <v-card-text>
-              <v-container>
+  <v-expansion-panels tile multiple hover :value="panels">
+    <v-expansion-panel
+      v-for="(category, index) in expenseCategories"
+      :key="index"
+    >
+      <v-expansion-panel-header>
+        {{ category }}
+      </v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-row>
+          <v-col cols="12">
+            <v-dialog v-model="dialog" width="350">
+              <template v-slot:activator="{ on }">
+                <v-simple-table>
+                  <template v-slot:default>
+                    <tbody>
+                      <tr
+                        v-for="(expense, index) in expenses.filter(
+                          (expense) => expense.category === category
+                        )"
+                        :key="index"
+                      >
+                        <td v-on="on" @click="editItem(expense)">
+                          {{ expense.description }}
+                        </td>
+                        <td v-on="on" @click="editItem(expense)">
+                          {{ expense.amount | currency }}
+                        </td>
+                        <td>
+                          <v-icon small @click="deleteItem(expense)">
+                            mdi-close
+                          </v-icon>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </template>
+              <v-card>
+                <v-card-text>
+                  <v-form @submit.prevent="save">
+                    <v-row>
+                      <v-col cols="12">
+                        <v-select
+                          v-model="editedItem.description"
+                          :items="expenseCategoryDescriptions"
+                          :error-messages="selectEditedItemErrors"
+                          label="Expense"
+                          outlined
+                          clearable
+                          required
+                          @change="$v.editedItem.description.$touch()"
+                          @blur="$v.editedItem.description.$touch()"
+                        ></v-select>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="number"
+                          v-model.number="editedItem.amount"
+                          :error-messages="amountEditedItemErrors"
+                          label="Amount"
+                          outlined
+                          required
+                          @input="$v.editedItem.amount.$touch()"
+                          @blur="$v.editedItem.amount.$touch()"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-btn
+                          type="submit"
+                          :disabled="$v.editedItem.$anyError"
+                          block
+                          color="green"
+                          x-large
+                          class="white--text"
+                        >
+                          <v-icon>mdi-send</v-icon>
+                          Update
+                        </v-btn>
+                        <v-btn
+                          block
+                          outlined
+                          color="primary"
+                          x-large
+                          class="white--text"
+                          @click="close"
+                        >
+                          <v-icon>mdi-close</v-icon>
+                          Cancel
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-form>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
+          </v-col>
+        </v-row>
+        <v-expansion-panels flat focusable>
+          <v-expansion-panel>
+            <v-expansion-panel-header>
+              <v-row>
+                <v-col cols="12">
+                  <v-icon>mdi-plus</v-icon>
+                  Add Expense
+                </v-col>
+              </v-row>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
+              <v-form @submit.prevent="save(category)">
                 <v-row>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" md="5">
                     <v-select
-                      v-model="editedItem.category"
-                      :items="expenseCategories"
-                      label="Category expense"
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-select
-                      v-model="editedItem.description"
+                      v-model="newExpense.description"
                       :items="expenseCategoryDescriptions"
-                      label="Description"
+                      :error-messages="selectErrors"
+                      label="Expense"
+                      outlined
+                      clearable
+                      autofocus
+                      required
+                      @change="$v.newExpense.description.$touch()"
+                      @blur="$v.newExpense.description.$touch()"
                     ></v-select>
                   </v-col>
-                  <v-col cols="12" sm="6" md="4">
+                  <v-col cols="12" md="4">
                     <v-text-field
                       type="number"
-                      v-model.number="editedItem.amount"
+                      v-model.number="newExpense.amount"
+                      :error-messages="amountErrors"
                       label="Amount"
+                      outlined
+                      required
+                      @input="$v.newExpense.amount.$touch()"
+                      @blur="$v.newExpense.amount.$touch()"
                     ></v-text-field>
                   </v-col>
+                  <v-col cols="12" md="2">
+                    <v-btn
+                      type="submit"
+                      :disabled="$v.newExpense.$invalid"
+                      block
+                      color="green"
+                      x-large
+                      class="white--text"
+                    >
+                      <v-icon>mdi-plus</v-icon>
+                      Add Expense
+                    </v-btn>
+                  </v-col>
                 </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn outlined @click="close">Cancel</v-btn>
-              <v-btn outlined @click="save">Save</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-spacer />
-      </v-toolbar>
-    </template>
-    <template v-slot:item.amount="{ item }">
-      {{ item.amount | currency }}
-    </template>
-    <template v-slot:item.action="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-      <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-    </template>
-    <template slot="body.append">
-      <tr>
-        <th class="body-1 font-weight-bold">Total:</th>
-        <td class="font-weight-bold">{{ totalExpensesOfMonth | currency }}</td>
-      </tr>
-    </template>
-  </v-data-table>
+              </v-form>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import {
+  required,
+  decimal,
+  minValue,
+  maxLength
+} from 'vuelidate/lib/validators'
 export default {
   name: 'Expense',
 
@@ -90,19 +181,35 @@ export default {
     }
   },
 
+  validations: {
+    newExpense: {
+      description: { required },
+      amount: {
+        required,
+        decimal,
+        maxLength: maxLength(15),
+        minValue: minValue(1)
+      }
+    },
+    editedItem: {
+      description: { required },
+      amount: {
+        required,
+        decimal,
+        maxLength: maxLength(15),
+        minValue: minValue(1)
+      }
+    }
+  },
+
   data: () => ({
     dialog: false,
-    headers: [
-      {
-        text: 'Category',
-        align: 'start',
-        sortable: true,
-        value: 'category'
-      },
-      { text: 'Amount', value: 'amount', sortable: false },
-      { text: 'Description', value: 'description', sortable: false },
-      { text: 'Actions', value: 'action', sortable: false }
-    ],
+    panels: [],
+    newExpense: {
+      category: '',
+      amount: 0,
+      description: ''
+    },
     editedIndex: -1,
     editedItem: {
       category: '',
@@ -116,15 +223,51 @@ export default {
     }
   }),
 
+  created() {
+    this.panels = this.expenseCategories.map((category, index) => index)
+  },
+
   computed: {
     ...mapGetters('budget', [
       'expenseCategories',
       'expenseCategoryDescriptions'
     ]),
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Expense' : 'Edit Expense'
+    selectErrors() {
+      const errors = []
+      if (!this.$v.newExpense.description.$dirty) return errors
+      !this.$v.newExpense.description.required &&
+        errors.push('Description required!')
+      return errors
     },
-
+    amountErrors() {
+      const errors = []
+      if (!this.$v.newExpense.amount.$dirty) return errors
+      !this.$v.newExpense.amount.decimal &&
+        errors.push('Amount must be a valid number')
+      !this.$v.newExpense.amount.required && errors.push('Amount required!')
+      !this.$v.newExpense.amount.minValue &&
+        errors.push('Amount must be higher than zero!')
+      !this.$v.newExpense.amount.maxLength && errors.push('Amount too large!')
+      return errors
+    },
+    selectEditedItemErrors() {
+      const errors = []
+      if (!this.$v.editedItem.description.$dirty) return errors
+      !this.$v.editedItem.description.required &&
+        errors.push('Description required!')
+      return errors
+    },
+    amountEditedItemErrors() {
+      const errors = []
+      if (!this.$v.editedItem.amount.$dirty) return errors
+      !this.$v.editedItem.amount.decimal &&
+        errors.push('Amount must be a valid number')
+      !this.$v.editedItem.amount.required && errors.push('Amount required!')
+      !this.$v.editedItem.amount.minValue &&
+        errors.push('Amount must be higher than zero!')
+      !this.$v.editedItem.amount.maxLength && errors.push('Amount too large!')
+      return errors
+    },
     totalExpensesOfMonth() {
       return this.expenses
         .map((expense) => expense.amount)
@@ -147,13 +290,11 @@ export default {
 
     deleteItem(item) {
       const index = this.expenses.indexOf(item)
-      if (confirm('Are you sure you want to delete this item?')) {
-        this.$store.dispatch('budget/deleteItem', {
-          date: this.date,
-          index: index,
-          budgetAttr: 'expenses'
-        })
-      }
+      this.$store.dispatch('budget/deleteItem', {
+        date: this.date,
+        index: index,
+        budgetAttr: 'expenses'
+      })
     },
 
     close() {
@@ -164,22 +305,32 @@ export default {
       }, 300)
     },
 
-    save() {
-      if (this.editedIndex > -1) {
+    save(category) {
+      if (this.editedIndex > -1 && !this.$v.editedItem.$invalid) {
         this.$store.dispatch('budget/updateItem', {
           date: this.date,
           index: this.editedIndex,
           editedItem: this.editedItem,
           budgetAttr: 'expenses'
         })
-      } else {
-        this.$store.dispatch('budget/addItem', {
-          date: this.date,
-          newItem: this.editedItem,
-          budgetAttr: 'expenses'
-        })
+      } else if (!this.$v.newExpense.$invalid) {
+        this.newExpense.category = category
+        this.$store
+          .dispatch('budget/addItem', {
+            date: this.date,
+            newItem: this.newExpense,
+            budgetAttr: 'expenses'
+          })
+          .then(() => (this.newExpense = this.createFreshObject()))
       }
       this.close()
+    },
+    createFreshObject() {
+      return {
+        category: '',
+        amount: 0,
+        description: ''
+      }
     }
   }
 }
