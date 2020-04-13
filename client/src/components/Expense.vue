@@ -305,6 +305,7 @@ export default {
 
     close() {
       this.dialog = false
+      this.$v.$reset()
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
