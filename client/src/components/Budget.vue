@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
-    <v-row justify="start">
-      <v-col cols="12" md="4">
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="4">
         <v-expansion-panels v-model="panel" flat tile>
           <v-expansion-panel>
             <v-expansion-panel-header color="primary" class="white--text">
@@ -44,28 +44,26 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </v-col>
-      <v-col cols="12" md="2">
+      <v-col cols="6" md="2">
         <v-select
           v-model="selectedCurrency"
           :items="currencies"
           label="Currency"
           outlined
+          dense
         ></v-select>
-      </v-col>
-      <v-spacer />
-      <v-col v-if="currentBudget" cols="12" md="6">
-        <v-card outlined :color="balanceTextTypeClass">
-          <v-card-text class="white--text text-center">
-            {{ Math.abs(balance) | currency }} {{ balanceText }}
-          </v-card-text>
-        </v-card>
       </v-col>
     </v-row>
     <template v-if="currentBudget">
       <v-row>
+        <v-col align-self="start" cols="12" md="4">
+          <BudgetPercentageChart
+            :monthlyBugdet="currentBudget"
+          ></BudgetPercentageChart>
+        </v-col>
         <v-col cols="12" md="8">
           <v-row>
-            <v-col>
+            <v-col class="pb-0">
               <Income
                 :date="currentBudget.date"
                 :incomes="currentBudget.incomes"
@@ -74,41 +72,62 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col>
-              <Expense
-                :date="currentBudget.date"
-                :expenses="currentBudget.expenses"
-                :key="forceReRenderExpenseDataTableKey"
-              ></Expense>
+            <v-col class="pt-0">
+              <v-card outlined shaped class="mx-2">
+                <v-card-text class="text-center">
+                  <span class="headline cyan--text">
+                    {{ Math.abs(balance) | currency }}
+                  </span>
+                  <span :class="balanceStyleTextClass">
+                    {{ balanceText }}
+                  </span>
+                </v-card-text>
+              </v-card>
             </v-col>
           </v-row>
         </v-col>
-        <v-col align-self="start" cols="12" md="4">
-          <BudgetPercentageChart
-            :monthlyBugdet="currentBudget"
-          ></BudgetPercentageChart>
-        </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" md="6">
-          <v-card outlined>
-            <v-card-title color="primary">Monthly balance</v-card-title>
-            <v-card-text>
-              <MonthlyBalanceChart
-                :yearlyBudget="yearlyBudget"
-              ></MonthlyBalanceChart>
-            </v-card-text>
-          </v-card>
+        <v-col>
+          <Expense
+            :date="currentBudget.date"
+            :expenses="currentBudget.expenses"
+            :key="forceReRenderExpenseDataTableKey"
+          ></Expense>
         </v-col>
-        <v-col cols="12" md="6">
-          <v-card outlined>
-            <v-card-title color="primary">Monthly wealth growth</v-card-title>
-            <v-card-text>
-              <MonthlyWealthGrowthChart
-                :yearlyBudget="yearlyBudget"
-              ></MonthlyWealthGrowthChart>
-            </v-card-text>
-          </v-card>
+        <v-col align-self="start" cols="12" md="6">
+          <v-row>
+            <v-col>
+              <v-card shaped outlined>
+                <v-card-title
+                  class="title font-weight-bold cyan--text text--darken-1"
+                >
+                  Monthly balance
+                </v-card-title>
+                <v-card-text>
+                  <MonthlyBalanceChart
+                    :yearlyBudget="yearlyBudget"
+                  ></MonthlyBalanceChart>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card shaped outlined>
+                <v-card-title
+                  class="title font-weight-bold cyan--text text--darken-1"
+                >
+                  Monthly wealth growth
+                </v-card-title>
+                <v-card-text>
+                  <MonthlyWealthGrowthChart
+                    :yearlyBudget="yearlyBudget"
+                  ></MonthlyWealthGrowthChart>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-col>
       </v-row>
     </template>
@@ -292,8 +311,10 @@ export default {
     balanceText() {
       return this.balance >= 0 ? 'LEFT TO BUDGET' : 'OVER BUDGET'
     },
-    balanceTextTypeClass() {
-      return this.balance >= 0 ? 'green' : 'red'
+    balanceStyleTextClass() {
+      return this.balance >= 0
+        ? 'subtitle-1 blue-grey--text'
+        : 'subtitle-1 red--text'
     }
   },
 

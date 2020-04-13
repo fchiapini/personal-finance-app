@@ -1,10 +1,12 @@
 <template>
-  <v-expansion-panels tile multiple hover :value="panels">
+  <v-expansion-panels flat multiple hover :value="panels">
     <v-expansion-panel
       v-for="(category, index) in expenseCategories"
       :key="index"
     >
-      <v-expansion-panel-header class="subtitle-1 cyan--text">
+      <v-expansion-panel-header
+        class="subtitle-1 font-weight-bold cyan--text text--darken-1"
+      >
         {{ category }}
       </v-expansion-panel-header>
       <v-expansion-panel-content>
@@ -17,12 +19,12 @@
                     (expense) => expense.category === category
                   )"
                   :key="index"
-                  class="blue-grey--text"
+                  class="grey--text text--darken-2"
                 >
-                  <td @click="editItem(expense)">
+                  <td class="body-2" @click="editItem(expense)">
                     {{ expense.description }}
                   </td>
-                  <td @click="editItem(expense)">
+                  <td class="body-2" @click="editItem(expense)">
                     {{ expense.amount | currency }}
                   </td>
                   <td>
@@ -35,9 +37,10 @@
             </v-simple-table>
           </v-col>
         </v-row>
-        <v-expansion-panels flat focusable>
+        <v-divider></v-divider>
+        <v-expansion-panels flat>
           <v-expansion-panel>
-            <v-expansion-panel-header>
+            <v-expansion-panel-header class="pt-2 pr-0 pb-0 pl-0">
               <v-row>
                 <v-col cols="12" class="cyan--text">
                   <v-icon>mdi-plus</v-icon>
@@ -55,6 +58,7 @@
                       :error-messages="selectErrors"
                       label="Expense"
                       outlined
+                      dense
                       clearable
                       autofocus
                       required
@@ -69,6 +73,7 @@
                       :error-messages="amountErrors"
                       label="Amount"
                       outlined
+                      dense
                       required
                       @input="$v.newExpense.amount.$touch()"
                       @blur="$v.newExpense.amount.$touch()"
@@ -80,7 +85,7 @@
                       :disabled="$v.newExpense.$invalid"
                       block
                       color="primary"
-                      x-large
+                      large
                       class="white--text"
                     >
                       <v-icon>mdi-plus</v-icon>
@@ -106,6 +111,7 @@
                   :error-messages="selectEditedItemErrors"
                   label="Expense"
                   outlined
+                  dense
                   clearable
                   required
                   @change="$v.editedItem.description.$touch()"
@@ -119,6 +125,7 @@
                   :error-messages="amountEditedItemErrors"
                   label="Amount"
                   outlined
+                  dense
                   required
                   @input="$v.editedItem.amount.$touch()"
                   @blur="$v.editedItem.amount.$touch()"
