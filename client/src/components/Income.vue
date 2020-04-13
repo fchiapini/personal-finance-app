@@ -26,6 +26,12 @@
                     </v-icon>
                   </td>
                 </tr>
+                <tr class="grey--text text--darken-2">
+                  <td></td>
+                  <td class="font-weight-bold body-2">
+                    {{ totalIncomesOfMonth | currency }}
+                  </td>
+                </tr>
               </tbody>
             </v-simple-table>
           </v-col>
