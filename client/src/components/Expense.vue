@@ -4,106 +4,44 @@
       v-for="(category, index) in expenseCategories"
       :key="index"
     >
-      <v-expansion-panel-header>
+      <v-expansion-panel-header class="subtitle-1 cyan--text">
         {{ category }}
       </v-expansion-panel-header>
       <v-expansion-panel-content>
         <v-row>
           <v-col cols="12">
-            <v-dialog v-model="dialog" width="350">
-              <template v-slot:activator="{ on }">
-                <v-simple-table>
-                  <template v-slot:default>
-                    <tbody>
-                      <tr
-                        v-for="(expense, index) in expenses.filter(
-                          (expense) => expense.category === category
-                        )"
-                        :key="index"
-                      >
-                        <td v-on="on" @click="editItem(expense)">
-                          {{ expense.description }}
-                        </td>
-                        <td v-on="on" @click="editItem(expense)">
-                          {{ expense.amount | currency }}
-                        </td>
-                        <td>
-                          <v-icon small @click="deleteItem(expense)">
-                            mdi-close
-                          </v-icon>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </template>
-              <v-card>
-                <v-card-text>
-                  <v-form @submit.prevent="save">
-                    <v-row>
-                      <v-col cols="12">
-                        <v-select
-                          v-model="editedItem.description"
-                          :items="expenseCategoryDescriptions"
-                          :error-messages="selectEditedItemErrors"
-                          label="Expense"
-                          outlined
-                          clearable
-                          required
-                          @change="$v.editedItem.description.$touch()"
-                          @blur="$v.editedItem.description.$touch()"
-                        ></v-select>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="number"
-                          v-model.number="editedItem.amount"
-                          :error-messages="amountEditedItemErrors"
-                          label="Amount"
-                          outlined
-                          required
-                          @input="$v.editedItem.amount.$touch()"
-                          @blur="$v.editedItem.amount.$touch()"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-btn
-                          type="submit"
-                          :disabled="$v.editedItem.$anyError"
-                          block
-                          color="green"
-                          x-large
-                          class="white--text"
-                        >
-                          <v-icon>mdi-send</v-icon>
-                          Update
-                        </v-btn>
-                        <v-btn
-                          block
-                          outlined
-                          color="primary"
-                          x-large
-                          class="white--text"
-                          @click="close"
-                        >
-                          <v-icon>mdi-close</v-icon>
-                          Cancel
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-form>
-                </v-card-text>
-              </v-card>
-            </v-dialog>
+            <v-simple-table>
+              <tbody>
+                <tr
+                  v-for="(expense, index) in expenses.filter(
+                    (expense) => expense.category === category
+                  )"
+                  :key="index"
+                  class="blue-grey--text"
+                >
+                  <td @click="editItem(expense)">
+                    {{ expense.description }}
+                  </td>
+                  <td @click="editItem(expense)">
+                    {{ expense.amount | currency }}
+                  </td>
+                  <td>
+                    <v-icon small @click="deleteItem(expense)">
+                      mdi-close
+                    </v-icon>
+                  </td>
+                </tr>
+              </tbody>
+            </v-simple-table>
           </v-col>
         </v-row>
         <v-expansion-panels flat focusable>
           <v-expansion-panel>
             <v-expansion-panel-header>
               <v-row>
-                <v-col cols="12">
+                <v-col cols="12" class="cyan--text">
                   <v-icon>mdi-plus</v-icon>
-                  Add Expense
+                  Add Item
                 </v-col>
               </v-row>
             </v-expansion-panel-header>
@@ -141,7 +79,7 @@
                       type="submit"
                       :disabled="$v.newExpense.$invalid"
                       block
-                      color="green"
+                      color="primary"
                       x-large
                       class="white--text"
                     >
@@ -156,6 +94,67 @@
         </v-expansion-panels>
       </v-expansion-panel-content>
     </v-expansion-panel>
+    <v-dialog v-model="dialog" width="350">
+      <v-card>
+        <v-card-text>
+          <v-form @submit.prevent="save">
+            <v-row>
+              <v-col cols="12">
+                <v-select
+                  v-model="editedItem.description"
+                  :items="expenseCategoryDescriptions"
+                  :error-messages="selectEditedItemErrors"
+                  label="Expense"
+                  outlined
+                  clearable
+                  required
+                  @change="$v.editedItem.description.$touch()"
+                  @blur="$v.editedItem.description.$touch()"
+                ></v-select>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  type="number"
+                  v-model.number="editedItem.amount"
+                  :error-messages="amountEditedItemErrors"
+                  label="Amount"
+                  outlined
+                  required
+                  @input="$v.editedItem.amount.$touch()"
+                  @blur="$v.editedItem.amount.$touch()"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-btn
+                  type="submit"
+                  :disabled="$v.editedItem.$anyError"
+                  block
+                  color="green"
+                  x-large
+                  class="white--text"
+                >
+                  <v-icon>mdi-send</v-icon>
+                  Update
+                </v-btn>
+              </v-col>
+              <v-col cols="12">
+                <v-btn
+                  block
+                  outlined
+                  color="primary"
+                  x-large
+                  class="white--text"
+                  @click="close"
+                >
+                  <v-icon>mdi-close</v-icon>
+                  Cancel
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-expansion-panels>
 </template>
 
