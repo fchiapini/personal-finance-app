@@ -176,9 +176,19 @@ export default {
   created() {
     this.dateList = this.initDateList()
     this.$store.dispatch('budget/bindBudgets').then(() => {
+      let initialDate = null
+      if (this.budgets.length === 0) {
+        initialDate = new Date().toLocaleString('default', {
+          month: 'numeric',
+          year: 'numeric'
+        })
+      } else {
+        initialDate = this.currentBudget.date
+      }
       this.selectedItemIndex = this.dateList.findIndex(
-        (x) => x.id === this.currentBudget.date
+        (x) => x.id === initialDate
       )
+      this.selectedBudgetDate = initialDate
       this.$store.dispatch('stopLoading')
     })
     this.$store.dispatch('user/loadUserConfiguration').then(() => {

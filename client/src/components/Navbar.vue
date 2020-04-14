@@ -6,7 +6,7 @@
       <template v-slot:activator="{ on }">
         <a v-on="on">
           <v-avatar size="36">
-            <v-img :src="user.image" alt="User image"></v-img>
+            <v-img :src="image" alt="User image"></v-img>
           </v-avatar>
         </a>
       </template>
@@ -14,12 +14,12 @@
         <v-list>
           <v-list-item>
             <v-list-item-avatar>
-              <v-img :src="user.image" alt="User image" />
+              <v-img :src="image" alt="User image" />
             </v-list-item-avatar>
 
             <v-list-item-content>
               <v-list-item-title class="font-weight-medium">
-                {{ user.name }}
+                {{ user.name ? user.name : user.email }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -40,7 +40,12 @@
 import { mapState } from 'vuex'
 export default {
   computed: {
-    ...mapState('user', ['user'])
+    ...mapState('user', ['user']),
+    image() {
+      return this.user.image
+        ? this.user.image
+        : require('../assets/avatar_placeholder.png')
+    }
   },
   methods: {
     logout: function() {
@@ -51,10 +56,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-.logo
-  width: 70px
-  height: 70px
-  border-radius: 50%
-</style>
