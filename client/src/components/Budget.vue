@@ -10,9 +10,8 @@
             <v-expansion-panel-content>
               <v-sheet class="mx-auto" color="white" max-width="700">
                 <v-slide-group
-                  v-model="selectedItemIndex"
+                  :value="selectedItemIndex"
                   class="pt-4"
-                  mandatory
                   show-arrows
                   :center-active="true"
                 >
@@ -243,7 +242,7 @@ export default {
     },
     onSelectDate(selectedDate) {
       this.selectedBudgetDate = selectedDate
-      this.panel = null
+      this.panel = -1
       this.selectedItemIndex = this.dateList.findIndex(
         (x) => x.id === selectedDate
       )
@@ -287,9 +286,9 @@ export default {
     },
     monthlyBudgetTitle() {
       if (this.selectedBudgetDate) {
-        return this.formatMonthYearDate(this.selectedBudgetDate)
+        return this.formatMonthYearFromDate(this.selectedBudgetDate)
       } else if (this.currentBudget) {
-        return this.formatMonthYearDate(this.currentBudget.date)
+        return this.formatMonthYearFromDate(this.currentBudget.date)
       } else {
         return new Date().toLocaleString('default', {
           month: 'long',

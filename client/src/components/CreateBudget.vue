@@ -11,10 +11,10 @@
       <v-col cols="12" sm="6" md="4" align-self="center">
         <p class="grey--text headline">
           Hey, there, looks like you need a budget for
-          {{ formatMonthYearDate(budgetDate) }}
+          {{ formatMonthFromDate(budgetDate) }}
         </p>
         <v-btn v-on:click.prevent="createBudget" tile color="primary" dark>
-          Starting planning for {{ formatMonthYearDate(budgetDate) }}
+          Starting planning for {{ formatMonthFromDate(budgetDate) }}
         </v-btn>
       </v-col>
     </v-row>
