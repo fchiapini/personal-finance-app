@@ -73,6 +73,7 @@ img
       justify-self: center
 
     .login__logo
+      margin-top: 5em
       grid-area: logo
       grid-row: 1
 
