@@ -2,21 +2,37 @@
   <v-app-bar v-if="user" app color="primary" dark>
     <v-toolbar-title>My personal finance</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-navigation-drawer color="primary" absolute permanent right>
-      <template v-slot:prepend>
-        <v-list-item>
-          <v-list-item-avatar>
-            <v-img :src="user.image" />
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>{{ user.name }}</v-list-item-title>
-            <a @click="logout">
-              <v-list-item-subtitle>Log out</v-list-item-subtitle>
-            </a>
-          </v-list-item-content>
-        </v-list-item>
+    <v-menu bottom :offset-x="true" :offset-y="true">
+      <template v-slot:activator="{ on }">
+        <a v-on="on">
+          <v-avatar size="36">
+            <v-img :src="user.image" alt="User image"></v-img>
+          </v-avatar>
+        </a>
       </template>
-    </v-navigation-drawer>
+      <v-card>
+        <v-list>
+          <v-list-item>
+            <v-list-item-avatar>
+              <v-img :src="user.image" alt="User image" />
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title class="font-weight-medium">
+                {{ user.name }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list-item>
+            <a @click="logout">
+              <v-icon>mdi-exit-to-app</v-icon>
+              Log out
+            </a>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-menu>
   </v-app-bar>
 </template>
 
