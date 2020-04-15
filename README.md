@@ -39,7 +39,7 @@ VUE_APP_FIREBASE_APP_ID=
 
 ### Installing
 
-# At client folder
+# In the client folder
 
 ## Project setup
 
@@ -85,7 +85,7 @@ firebase deploy
 
 ## Contributing
 
-Please send me an email [Felipe Chiapini](fchiapini@gmail.com) I will be happy to help
+Please send me an email to fchiapini@gmail.com I will be happy to help
 
 ## Author
 
