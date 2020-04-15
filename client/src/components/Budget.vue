@@ -145,7 +145,12 @@ import BudgetPercentageChart from './BudgetPercentageChart.vue'
 import MonthlyBalanceChart from './MonthlyBalanceChart.vue'
 import MonthlyWealthGrowthChart from './MonthlyWealthGrowthChart.vue'
 import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
-import { utilsMixin, MONTH_AND_YEAR, ONLY_YEAR } from '../mixins/utilsMixin.js'
+import {
+  utilsMixin,
+  MONTH_AND_YEAR,
+  ONLY_YEAR,
+  ONLY_MONTH
+} from '../mixins/utilsMixin.js'
 
 export default {
   name: 'Budget',
@@ -280,7 +285,11 @@ export default {
       let latestDate = this.budgets
         .map((budget) => budget.date)
         .reduce((a, b) => {
-          return a > b ? a : b
+          return this.formatDate(a, ONLY_MONTH) >
+            this.formatDate(b, ONLY_MONTH) &&
+            this.formatDate(a, ONLY_YEAR) > this.formatDate(b, ONLY_YEAR)
+            ? a
+            : b
         }, '')
       return this.budgets.find((budget) => budget.date === latestDate)
     },
