@@ -86,6 +86,7 @@ firebase deploy
 - [Vue.js](https://vuejs.org/) - The javascript framework
 - [Firebase](https://firebase.google.com/) - Authentication and real time database
 - [Vuetify](https://vuetifyjs.com) - Vue UI Library with beautifully handcrafted Material Components
+- [Vue-Chartjs](https://vue-chartjs.org/) - Easy and beautiful charts with Chart.js and Vue.js
 
 ## Contributing
 
