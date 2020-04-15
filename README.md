@@ -2,6 +2,10 @@
 
 Create your monthly budget.
 
+## Live Demo
+
+[Live Demo](https://fir-app-3e66a.firebaseapp.com)
+
 ## Getting Started
 
 Create a firebase account:
