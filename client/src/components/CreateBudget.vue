@@ -11,10 +11,10 @@
       <v-col cols="12" sm="6" md="4" align-self="center">
         <p class="grey--text headline">
           Hey, there, looks like you need a budget for
-          {{ formatMonthFromDate(budgetDate) }}
+          {{ month }}
         </p>
         <v-btn v-on:click.prevent="createBudget" tile color="primary" dark>
-          Starting planning for {{ formatMonthFromDate(budgetDate) }}
+          Starting planning for {{ month }}
         </v-btn>
       </v-col>
     </v-row>
@@ -23,7 +23,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { utilsMixin } from '../mixins/utilsMixin.js'
+import { utilsMixin, ONLY_MONTH } from '../mixins/utilsMixin.js'
 export default {
   name: 'CreateBudget',
 
@@ -45,7 +45,10 @@ export default {
   },
 
   computed: {
-    ...mapState('budget', ['months'])
+    ...mapState('budget', ['months']),
+    month() {
+      return this.formatDate(this.budgetDate, ONLY_MONTH)
+    }
   }
 }
 </script>

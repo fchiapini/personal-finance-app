@@ -145,7 +145,7 @@ import BudgetPercentageChart from './BudgetPercentageChart.vue'
 import MonthlyBalanceChart from './MonthlyBalanceChart.vue'
 import MonthlyWealthGrowthChart from './MonthlyWealthGrowthChart.vue'
 import { CURRENCY_OPTIONS } from '../plugins/vuecurrencyfilter'
-import { utilsMixin } from '../mixins/utilsMixin.js'
+import { utilsMixin, MONTH_AND_YEAR, ONLY_YEAR } from '../mixins/utilsMixin.js'
 
 export default {
   name: 'Budget',
@@ -286,9 +286,9 @@ export default {
     },
     monthlyBudgetTitle() {
       if (this.selectedBudgetDate) {
-        return this.formatMonthYearFromDate(this.selectedBudgetDate)
+        return this.formatDate(this.selectedBudgetDate, MONTH_AND_YEAR)
       } else if (this.currentBudget) {
-        return this.formatMonthYearFromDate(this.currentBudget.date)
+        return this.formatDate(this.currentBudget.date, MONTH_AND_YEAR)
       } else {
         return new Date().toLocaleString('default', {
           month: 'long',
@@ -299,7 +299,8 @@ export default {
     yearlyBudget() {
       return this.budgets.filter(
         (budget) =>
-          this.getYear(budget.date) === this.getYear(this.currentBudget.date)
+          this.formatDate(budget.date, ONLY_YEAR) ===
+          this.formatDate(this.currentBudget.date, ONLY_YEAR)
       )
     },
     balance() {
