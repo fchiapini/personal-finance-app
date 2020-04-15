@@ -25,7 +25,7 @@ Create a firebase account:
 }
 ```
 
-- Create .env file for firebase project information
+- In the client folder create a .env file for firebase project information
 
 ```
 VUE_APP_FIREBASE_API_KEY=
@@ -39,7 +39,7 @@ VUE_APP_FIREBASE_APP_ID=
 
 ### Installing
 
-# cd client
+# At client folder
 
 ## Project setup
 
