@@ -9,80 +9,88 @@ Create a firebase account:
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+- Node 8.11.0+
+  - [Node](https://nodejs.org/en/)
+- Vue cli
+
+  - [Vue cli](https://cli.vuejs.org/guide/installation.html)
+
+- Create .firebaserc file inside client folder
 
 ```
-Give examples
+{
+  "projects": {
+    "default": "your_firebase_app"
+  }
+}
+```
+
+- Create .env file for firebase project information
+
+```
+VUE_APP_FIREBASE_API_KEY=
+VUE_APP_FIREBASE_AUTH_DOMAIN=
+VUE_APP_FIREBASE_DATABASE_URL=
+VUE_APP_FIREBASE_PROJECT_ID=
+VUE_APP_FIREBASE_STORAGE_BUCKET=
+VUE_APP_FIREBASE_MESSAGING_SENDER_ID=
+VUE_APP_FIREBASE_APP_ID=
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+# cd client
 
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
+## Project setup
 
 ```
-until finished
+npm install
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
+### Compiles and hot-reloads for development
 
 ```
-Give an example
+npm run serve
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
+### Compiles and minifies for production
 
 ```
-Give an example
+npm run build
 ```
+
+### Lints and fixes files
+
+```
+npm run lint
+```
+
+### Customize configuration
+
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+```
+cd client
+npm run build
+firebase deploy
+```
 
 ## Built With
 
-- [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-- [Maven](https://maven.apache.org/) - Dependency Management
-- [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+- [Vue.js](https://vuejs.org/) - The javascript framework
+- [Firebase](https://firebase.google.com/) - Authentication and real time database
+- [Vuetify](https://vuetifyjs.com) - Vue UI Library with beautifully handcrafted Material Components
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please send me an email [Felipe Chiapini](fchiapini@gmail.com) I will be happy to help
 
-## Versioning
+## Author
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
-
-## Authors
-
-- **Billie Thompson** - _Initial work_ - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+- **Felipe Chiapini** - Project owner - [Felipe Chiapini](https://github.com/fchiapini)
 
 ## Acknowledgments
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+- A special thanks to my wife for supporting me
