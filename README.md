@@ -89,7 +89,7 @@ Please send me an email to fchiapini@gmail.com I will be happy to help
 
 ## Author
 
-- **Felipe Chiapini** - Project owner - [Felipe Chiapini](https://github.com/fchiapini)
+- **Felipe Chiapini** - Project owner - [GitHub](https://github.com/fchiapini)
 
 ## Acknowledgments
 
