@@ -104,6 +104,8 @@ export default {
           } else {
             data[month] = data[month - 1] + monthBalance
           }
+        } else {
+          data.push(0)
         }
       })
       return data

@@ -79,6 +79,9 @@ export default {
             backgroundColor.push(this.chartBackGroundColors.red)
           }
           data.push(monthBalance)
+        } else {
+          backgroundColor.push(this.chartBackGroundColors.blue)
+          data.push(0)
         }
       })
 
