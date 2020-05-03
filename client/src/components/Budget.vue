@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="4">
-        <v-expansion-panels v-model="panel" flat tile>
+        <v-expansion-panels :value="0" flat tile>
           <v-expansion-panel>
             <v-expansion-panel-header color="primary" class="white--text">
               {{ monthlyBudgetTitle }}
@@ -247,7 +247,6 @@ export default {
     },
     onSelectDate(selectedDate) {
       this.selectedBudgetDate = selectedDate
-      this.panel = -1
       this.selectedItemIndex = this.dateList.findIndex(
         (x) => x.id === selectedDate
       )
