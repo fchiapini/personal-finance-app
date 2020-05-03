@@ -12,7 +12,7 @@
                 <v-slide-group
                   :value="selectedItemIndex"
                   class="pt-4"
-                  show-arrows
+                  :show-arrows="false"
                   :center-active="true"
                 >
                   <v-slide-item
