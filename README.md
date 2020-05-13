@@ -11,6 +11,24 @@ Create your monthly budget.
 Create a firebase account:
 [Firebase](https://firebase.google.com/)
 
+- Create a new project and new app
+
+- Create a Cloud firestore database with the following rules:
+
+```
+rules_version = '2';
+service cloud.firestore {
+    match /databases/{database}/documents {
+        match /users/{uid}/budgets/{budgetId} {
+            allow read, write: if request.auth.uid == uid
+        }
+        match /users/{uid}/configuration/{docId} {
+            allow read, write: if request.auth.uid == uid
+        }
+    }
+}
+```
+
 ### Prerequisites
 
 - Node 8.11.0+
@@ -31,11 +49,13 @@ Create a firebase account:
 
 - In the client folder create a .env file for firebase project information
 
+  - For this project you need to fill the vairables VUE_APP_FIREBASE_API_KEY, VUE_APP_FIREBASE_AUTH_DOMAIN and VUE_APP_FIREBASE_PROJECT_ID.
+
 ```
-VUE_APP_FIREBASE_API_KEY=
-VUE_APP_FIREBASE_AUTH_DOMAIN=
+VUE_APP_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+VUE_APP_FIREBASE_AUTH_DOMAIN=YOUR=FIREBASE_AUTH_DOMAIN
 VUE_APP_FIREBASE_DATABASE_URL=
-VUE_APP_FIREBASE_PROJECT_ID=
+VUE_APP_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
 VUE_APP_FIREBASE_STORAGE_BUCKET=
 VUE_APP_FIREBASE_MESSAGING_SENDER_ID=
 VUE_APP_FIREBASE_APP_ID=
