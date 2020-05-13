@@ -31,9 +31,9 @@ service cloud.firestore {
 
 ### Prerequisites
 
-- Node 8.11.0+
+- Node 12.14.+
   - [Node](https://nodejs.org/en/)
-- Vue cli
+- Vue cli 4.2.+
 
   - [Vue cli](https://cli.vuejs.org/guide/installation.html)
 
