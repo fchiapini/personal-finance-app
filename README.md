@@ -6,6 +6,12 @@ Create your monthly budget.
 
 [Live Demo](https://fir-app-3e66a.firebaseapp.com)
 
+![Screenshot 1](client/src/screenshots/screenshot1.png)
+
+![Screenshot 2](client/src/screenshots/screenshot2.png)
+
+![Screenshot 3](client/src/screenshots/screenshot3.png)
+
 ## Getting Started
 
 Create a firebase account:
